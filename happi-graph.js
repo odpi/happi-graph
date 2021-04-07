@@ -62,23 +62,23 @@ class HappiGraph extends PolymerElement {
         type: Array,
         value: []
       },
-      data: {
+      graphData: {
         type: Object,
         value: null,
-        observer: '_dataUpdate'
+        observer: '_graphDataUpdate'
       }
     };
   }
 
-  _dataUpdate(newData) {
-    console.log('_dataUpdate(', newData, ')');
+  _graphDataUpdate(newGraphData) {
+    console.log('_graphDataUpdate(', newGraphData, ')');
 
-    if(newData && newData.nodes.length > 0 && newData.links.length > 0) {
+    if(newGraphData && newGraphData.nodes.length >= 0 && newGraphData.links.length >= 0) {
       this.removeData();
 
-      this.graphDirection = newData.graphDirection;
+      this.graphDirection = newGraphData.graphDirection;
 
-      this.nodes = newData.nodes.map(n => {
+      this.nodes = newGraphData.nodes.map(n => {
         let keys = Object.keys(n.properties ? n.properties : {});
 
         let props = keys.map(k => {
@@ -97,15 +97,15 @@ class HappiGraph extends PolymerElement {
           type: this.propertiesMap[n.group] ? this.propertiesMap[n.group].icon : 'simple-square',
           value: n.label ? n.label : 'N/A',
           label: n.group ? n.group : 'N/A',
-          selected: n.id === newData.selectedNodeId,
-          width: 250,
+          selected: n.id === newGraphData.selectedNodeId,
+          width: 300,
           height: getNodeHeight(props.length),
           properties: [
             ...props
           ]
         };
 
-        this.links = newData.links.map(e => {
+        this.links = newGraphData.links.map(e => {
           return {
             id: `${e.from}-${e.to}`,
             label: e.label,
@@ -121,7 +121,9 @@ class HappiGraph extends PolymerElement {
 
       let selectedNode = this.nodes.filter(n => n.selected === true).pop();
 
-      this.nodes = [ ...compute(selectedNode.id, this.nodes, this.links, newData.graphDirection) ];
+      this.nodes = selectedNode ?
+                   [...compute(selectedNode.id, this.nodes, this.links, newGraphData.graphDirection) ] :
+                   [];
 
       this.links = [
         ...this.links.map(e => {
@@ -148,7 +150,7 @@ class HappiGraph extends PolymerElement {
   removeData() {
     this.nodes = [];
     this.links = [];
-    this.data = null;
+    this.graphData = null;
 
     this.allGroup ? this.allGroup.remove() : console.log('ALL_GROUP_EMPTY');
   }
@@ -292,8 +294,8 @@ class HappiGraph extends PolymerElement {
     let graphBBox = this.allGroup.node().getBBox();
 
     let scaledBy = Math.min(
-      (svgWidth - 50) / graphBBox.width,
-      (svgHeight - 50) / graphBBox.height,
+      (svgWidth - 100) / graphBBox.width,
+      (svgHeight - 100) / graphBBox.height,
       1
     );
 
@@ -446,8 +448,8 @@ class HappiGraph extends PolymerElement {
           display:flex;
           flex-direction: column;
           position:absolute;
-          top:0;
-          left:0;
+          top:5px;
+          left:5px;
         }
       </style>
 
@@ -478,7 +480,7 @@ class HappiGraph extends PolymerElement {
           </svg>
         </div>
 
-        <template is="dom-if" if="[[ hasSize(nodes, data) ]]">
+        <template is="dom-if" if="[[ hasSize(nodes, graphData) ]]">
           <div class="happi-graph-legend">
             <happi-graph-legend graph-nodes="{{ nodes }}"
                                 icons-map="{{ iconsMap }}"
@@ -486,12 +488,16 @@ class HappiGraph extends PolymerElement {
           </div>
         </template>
 
-        <template is="dom-if" if="[[ hasSize(nodes, data) ]]">
+        <template is="dom-if" if="[[ hasSize(nodes, graphData) ]]">
           <div class="happi-graph-actions">
+            <slot name="pre-actions"></slot>
+
             <paper-icon-button icon="icons:zoom-in" on-click="customZoomIn"></paper-icon-button>
             <paper-icon-button icon="icons:zoom-out" on-click="customZoomOut"></paper-icon-button>
             <paper-icon-button icon="icons:settings-overscan" on-click="centerGraph"></paper-icon-button>
             <paper-icon-button icon="icons:cached" on-click="cachedGraph"></paper-icon-button>
+
+            <slot name="post-actions"></slot>
           </div>
         </template>
       </div>

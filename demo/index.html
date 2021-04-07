@@ -63,7 +63,9 @@
       <happi-graph id="happi-graph-three"></happi-graph>
     </div>
 
-    <script>
+    <script type="module">
+      import { iconsMap } from 'egeria-js-commons';
+
       let propertiesMap = {
         SimpleSquare: {
           icon: 'simple-square'
@@ -71,10 +73,6 @@
         GroupName: {
           icon: 'simple-square'
         }
-      };
-
-      let iconsMap = {
-        'simple-square': `<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0 0H20V20H0V0Z" fill="white"/></svg>`,
       };
 
       let data = {
@@ -112,12 +110,12 @@
       let happiGraphInstance = document.querySelector('#happi-graph');
       happiGraphInstance.iconsMap = iconsMap;
       happiGraphInstance.propertiesMap = propertiesMap;
-      happiGraphInstance.data = { ...data };
+      happiGraphInstance.graphData = { ...data };
       happiGraphInstance.addEventListener('happi-graph-on-node-click', ({ detail }) => {
         console.log(detail);
       });
       happiGraphInstance.addEventListener('happi-graph-on-cached-graph', ({ id }) => {
-        happiGraphInstance.data = { ...data };
+        happiGraphInstance.graphData = { ...data };
       });
 
       let data2 = {
@@ -130,7 +128,7 @@
           { id: 3, label: 'This is the value of Node 3', group: 'GroupName', properties: {} },
           { id: 4, label: 'This is the value of Node 4', group: 'GroupName', properties: {} },
         ],
-        links: links = [
+        links: [
           { from: 0, to: 1, connectionFrom: false, connectionTo: true },
           { from: 0, to: 2, connectionFrom: false, connectionTo: true },
           { from: 0, to: 3, connectionFrom: false, connectionTo: true },
@@ -139,14 +137,14 @@
       };
 
       let happiGraphInstance2 = document.querySelector('#happi-graph-two');
-      happiGraphInstance2.data = { ...data2 };
       happiGraphInstance2.iconsMap = iconsMap;
       happiGraphInstance2.propertiesMap = propertiesMap;
+      happiGraphInstance2.graphData = { ...data2 };
       happiGraphInstance2.addEventListener('happi-graph-on-node-click', ({ detail }) => {
         console.log(detail);
       });
       happiGraphInstance2.addEventListener('happi-graph-on-cached-graph', ({ id }) => {
-        happiGraphInstance2.data = { ...data2 };
+        happiGraphInstance2.graphData = { ...data2 };
       });
 
       let data3 = {
@@ -157,14 +155,14 @@
       };
 
       let happiGraphInstance3 = document.querySelector('#happi-graph-three');
-      happiGraphInstance3.data = { ...data3 };
       happiGraphInstance3.iconsMap = iconsMap;
       happiGraphInstance3.propertiesMap = propertiesMap;
+      happiGraphInstance3.graphData = { ...data3 };
       happiGraphInstance3.addEventListener('happi-graph-on-node-click', ({ detail }) => {
         console.log(detail);
       });
       happiGraphInstance3.addEventListener('happi-graph-on-cached-graph', ({ id }) => {
-        happiGraphInstance3.data = { ...data3 };
+        happiGraphInstance3.graphData = { ...data3 };
       });
 
       /* Buttons */
@@ -194,9 +192,9 @@
       });
 
       document.querySelector('#add-data').addEventListener('click', () => {
-        happiGraphInstance.data = { ...data };
-        happiGraphInstance2.data = { ...data2 };
-        happiGraphInstance3.data = { ...data3 };
+        happiGraphInstance.graphData = { ...data };
+        happiGraphInstance2.graphData = { ...data2 };
+        happiGraphInstance3.graphData = { ...data3 };
       });
     </script>
   </body>
