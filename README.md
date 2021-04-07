@@ -75,4 +75,4 @@ document.querySelector('#add-data').addEventListener('click', () => {
 ![3 nodes graph example](./docs/print-screen-happi-graph-3-nodes.png?raw=true "3 nodes graph example")
 
 ## License
-[MIT](https://choosealicense.com/licenses/mit/)
+[Apache-2.0 License](http://www.apache.org/licenses/)
