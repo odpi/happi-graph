@@ -25,7 +25,7 @@ let iconsMap = {
 
 let happiGraphInstance = document.querySelector('#happi-graph');
 
-let data = {
+let graphData = {
   graphDirection: 'VERTICAL',
   selectedNodeId: 0,
   nodes: [
@@ -35,19 +35,17 @@ let data = {
     { id: 3, properties: {} },
     { id: 4, properties: {} },
   ],
-  links: []
+  links: [
+    { from: 0, to: 1, connectionFrom: false, connectionTo: true },
+    { from: 0, to: 2, connectionFrom: false, connectionTo: true },
+    { from: 0, to: 3, connectionFrom: false, connectionTo: true },
+    { from: 3, to: 4, connectionFrom: false, connectionTo: true }
+  ]
 };
 
-data.links = [
-  { from: 0, to: 1, connectionFrom: false, connectionTo: true },
-  { from: 0, to: 2, connectionFrom: false, connectionTo: true },
-  { from: 0, to: 3, connectionFrom: false, connectionTo: true },
-  { from: 3, to: 4, connectionFrom: false, connectionTo: true }
-];
-
-happiGraphInstance.data = { ...data };
 happiGraphInstance.iconsMap = iconsMap;
 happiGraphInstance.propertiesMap = propertiesMap;
+happiGraphInstance.graphData = { ...graphData };
 
 zoomIn.addEventListener('click', () => {
   happiGraphInstance.customZoomIn();
@@ -66,7 +64,7 @@ document.querySelector('#remove-data').addEventListener('click', () => {
 });
 
 document.querySelector('#add-data').addEventListener('click', () => {
-  happiGraphInstance.data = { ...data };
+  happiGraphInstance.graphData = { ...graphData };
 });
 ```
 
