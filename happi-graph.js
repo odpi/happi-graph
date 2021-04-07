@@ -359,8 +359,8 @@ class HappiGraph extends PolymerElement {
         :host {
           display: flex;
           flex-grow: 1;
-          width: 100%;
-          height: 100%;
+          /* width: 100%; TODO: fix this issue
+          height: 100%; */
           font: var(--happi-graph-font-family);
         }
 
