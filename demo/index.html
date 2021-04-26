@@ -23,8 +23,8 @@
       }
 
       .container {
-        height:700px;
-        width: 1200px;
+        height:100vh;
+        width: 100%;
         margin: 0 auto;
         margin-bottom:20px;
       }
@@ -111,11 +111,16 @@
       happiGraphInstance.iconsMap = iconsMap;
       happiGraphInstance.propertiesMap = propertiesMap;
       happiGraphInstance.graphData = { ...data };
+      happiGraphInstance.init();
+
       happiGraphInstance.addEventListener('happi-graph-on-node-click', ({ detail }) => {
         console.log(detail);
       });
+
       happiGraphInstance.addEventListener('happi-graph-on-cached-graph', ({ id }) => {
-        happiGraphInstance.graphData = { ...data };
+        happiGraphInstance.updateGraphData({ ...data });
+        happiGraphInstance2.updateGraphData({ ...data2 });
+        happiGraphInstance3.updateGraphData({ ...data3 });
       });
 
       let data2 = {
@@ -140,6 +145,7 @@
       happiGraphInstance2.iconsMap = iconsMap;
       happiGraphInstance2.propertiesMap = propertiesMap;
       happiGraphInstance2.graphData = { ...data2 };
+      happiGraphInstance2.init();
       happiGraphInstance2.addEventListener('happi-graph-on-node-click', ({ detail }) => {
         console.log(detail);
       });
@@ -158,6 +164,7 @@
       happiGraphInstance3.iconsMap = iconsMap;
       happiGraphInstance3.propertiesMap = propertiesMap;
       happiGraphInstance3.graphData = { ...data3 };
+      happiGraphInstance3.init();
       happiGraphInstance3.addEventListener('happi-graph-on-node-click', ({ detail }) => {
         console.log(detail);
       });
@@ -192,9 +199,9 @@
       });
 
       document.querySelector('#add-data').addEventListener('click', () => {
-        happiGraphInstance.graphData = { ...data };
-        happiGraphInstance2.graphData = { ...data2 };
-        happiGraphInstance3.graphData = { ...data3 };
+        happiGraphInstance.updateGraphData({ ...data });
+        happiGraphInstance2.updateGraphData({ ...data2 });
+        happiGraphInstance3.updateGraphData({ ...data3 });
       });
     </script>
   </body>
