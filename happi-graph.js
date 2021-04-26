@@ -93,7 +93,7 @@ class HappiGraph extends PolymerElement {
     if(newGraphData && newGraphData.nodes.length >= 0 && newGraphData.links.length >= 0) {
       this.removeData();
 
-      this.graphDirection = newGraphData.graphDirection;
+      this.graphDirection = newGraphData.graphDirection ? newGraphData.graphDirection : this.graphDirection;
 
       this.nodes = newGraphData.nodes.map(n => {
         let keys = Object.keys(n.properties ? n.properties : {});
@@ -139,7 +139,7 @@ class HappiGraph extends PolymerElement {
       let selectedNode = this.nodes.filter(n => n.selected === true).pop();
 
       this.nodes = selectedNode ?
-                   [...compute(selectedNode.id, this.nodes, this.links, newGraphData.graphDirection) ] :
+                   [...compute(selectedNode.id, this.nodes, this.links, this.graphDirection) ] :
                    [];
 
       this.links = [
@@ -185,7 +185,8 @@ class HappiGraph extends PolymerElement {
 
     this.zoom =
       d3.zoom()
-        .on('zoom', this.zooming);
+        .extent([[0,0],[300,300]])
+        .on('zoom', this.zooming)
 
     this.svg.call(this.zoom);
   }
