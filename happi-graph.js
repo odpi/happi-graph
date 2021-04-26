@@ -22,6 +22,10 @@ class HappiGraph extends PolymerElement {
 
   static get properties() {
     return {
+      debug: {
+        type: Boolean,
+        value: false
+      },
       iconsMap: {
         type: Object,
         value: null
@@ -64,14 +68,27 @@ class HappiGraph extends PolymerElement {
       },
       graphData: {
         type: Object,
-        value: null,
-        observer: '_graphDataUpdate'
+        value: null
       }
     };
   }
 
-  _graphDataUpdate(newGraphData) {
-    console.log('_graphDataUpdate(', newGraphData, ')');
+  connectedCallback() {
+    super.connectedCallback();
+
+    this.init();
+  }
+
+  init() {
+    if(this.graphData) {
+      this.updateGraphData(this.graphData);
+    } else {
+      this.debug ? console.log('NO_GRAPH_DATA') : 0;
+    }
+  }
+
+  updateGraphData(newGraphData) {
+    this.debug ? console.log('updateGraphData(', newGraphData, ')') : 0 ;
 
     if(newGraphData && newGraphData.nodes.length >= 0 && newGraphData.links.length >= 0) {
       this.removeData();
@@ -152,7 +169,7 @@ class HappiGraph extends PolymerElement {
     this.links = [];
     this.graphData = null;
 
-    this.allGroup ? this.allGroup.remove() : console.log('ALL_GROUP_EMPTY');
+    this.allGroup ? this.allGroup.remove() : (this.debug ? console.log('ALL_GROUP_EMPTY') : 0);
   }
 
   initGraph() {
@@ -359,8 +376,8 @@ class HappiGraph extends PolymerElement {
         :host {
           display: flex;
           flex-grow: 1;
-          /* width: 100%; TODO: fix this issue
-          height: 100%; */
+          width: 100%;
+          height: 100%;
           font: var(--happi-graph-font-family);
         }
 
