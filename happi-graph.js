@@ -54,6 +54,10 @@ class HappiGraph extends PolymerElement {
         type: Object,
         value: null
       },
+      linksTypeIconMap: {
+        type: Array,
+        value: []
+      },
       graphDirection: {
         type: String,
         value: ''
@@ -183,9 +187,12 @@ class HappiGraph extends PolymerElement {
     this.linksGroup = this.allGroup.append('g').attr('class', 'links-group');
     this.nodesGroup = this.allGroup.append('g').attr('class', 'nodes-group');
 
+    let svgWidth = parseInt(this.svg.style('width'));
+    let svgHeight = parseInt(this.svg.style('height'));
+
     this.zoom =
       d3.zoom()
-        .extent([[0,0],[300,300]])
+        .extent([[0,0],[svgWidth, svgHeight]])
         .on('zoom', this.zooming)
 
     this.svg.call(this.zoom);
@@ -272,13 +279,15 @@ class HappiGraph extends PolymerElement {
       .append('line')
       .style('stroke', 'black')
       .style('stroke-width', 2)
-      .attr('marker-start', (d) => (d.connectionFrom) ? 'url(#arrow-start)' : '')
-      .attr('marker-end', (d) => (d.connectionTo) ? 'url(#arrow-end)' : '')
+      .attr('stroke-dasharray', (d) => {
+        return this.linksTypeIconMap[d.type] ? this.linksTypeIconMap[d.type].strokeDashArray : null;
+      })
+      .attr('marker-start', (d) => (d.connectionFrom) ? 'url(#arrow-start)' : null)
+      .attr('marker-end', (d) => (d.connectionTo) ? 'url(#arrow-end)' : null)
       .attr('from', function(d) { return d.from.id; })
       .attr('to', function(d) { return d.to.id; })
       .attr('x1', (d) => self.graphDirection === 'HORIZONTAL' ? d.from.x + d.from.width + 3 : d.from.x + (d.from.width/2))
       .attr('y1', (d) => self.graphDirection === 'HORIZONTAL' ? d.from.y + (d.from.height/2) : d.from.y - 3)
-
       .attr('x2', (d) => self.graphDirection === 'HORIZONTAL' ? d.to.x - 5 : d.to.x + (d.to.width/2))
       .attr('y2', (d) => self.graphDirection === 'HORIZONTAL' ? d.to.y + (d.to.height/2): d.to.y + (d.to.height) + 5);
   }
@@ -501,8 +510,10 @@ class HappiGraph extends PolymerElement {
         <template is="dom-if" if="[[ hasSize(nodes, graphData) ]]">
           <div class="happi-graph-legend">
             <happi-graph-legend graph-nodes="{{ nodes }}"
+                                graph-links="{{ links }}"
                                 icons-map="{{ iconsMap }}"
-                                properties-map="{{ propertiesMap }}"></happi-graph-legend>
+                                properties-map="{{ propertiesMap }}"
+                                links-type-icon-map="{{ linksTypeIconMap }}"></happi-graph-legend>
           </div>
         </template>
 

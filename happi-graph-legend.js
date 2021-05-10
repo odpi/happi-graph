@@ -19,6 +19,10 @@ class HappiGraphLegend extends PolymerElement {
         type: Object,
         value: {}
       },
+      linksTypeIconMap: {
+        type: Object,
+        value: {}
+      },
       labels: {
         type: Object,
         value: []
@@ -28,11 +32,34 @@ class HappiGraphLegend extends PolymerElement {
         value: {},
         observer: '_graphNodesUpdate'
       },
+      graphLinks: {
+        type: Object,
+        value: {},
+        observer: '_graphLinksUpdate'
+      },
       isMinimized: {
         type: Boolean,
         value: false
       }
     };
+  }
+
+  _graphLinksUpdate(newGraphLinks) {
+    let propertiesMap = {};
+    let _links = newGraphLinks;
+
+    if(_links.length) {
+      _links.map(l => {
+        if(l.type && this.linksTypeIconMap[l.type]) {
+          propertiesMap[l.type] = this.linksTypeIconMap[l.type].icon;
+        }
+      });
+
+      this.labels = [
+        ...this.labels,
+        ...Object.keys(propertiesMap)
+      ]
+    }
   }
 
   _graphNodesUpdate(newGraphNodes) {
@@ -49,7 +76,10 @@ class HappiGraphLegend extends PolymerElement {
         });
       });
 
-      this.labels = [...Object.keys(propertiesMap)];
+      this.labels = [
+        ...this.labels,
+        ...Object.keys(propertiesMap)
+      ];
     } else {
       this.labels = [];
     }
@@ -59,9 +89,11 @@ class HappiGraphLegend extends PolymerElement {
     this.isMinimized = !this.isMinimized;
   }
 
-  getIcon(groupName) {
-    if(this.propertiesMap[groupName] && this.iconsMap[this.propertiesMap[groupName].icon]) {
-      return this.iconsMap[this.propertiesMap[groupName].icon];
+  getIcon(key) {
+    if((this.propertiesMap[key] && this.iconsMap[this.propertiesMap[key].icon])) {
+      return this.iconsMap[this.propertiesMap[key].icon];
+    } else if (this.linksTypeIconMap[key] && this.iconsMap[this.linksTypeIconMap[key].icon]) {
+      return this.iconsMap[this.linksTypeIconMap[key].icon];
     } else {
       return simpleSquareIcon;
     }
