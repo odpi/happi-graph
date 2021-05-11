@@ -133,7 +133,8 @@ class HappiGraph extends PolymerElement {
             from: e.from,
             to: e.to,
             connectionFrom: e.connectionFrom ? e.connectionFrom : false,
-            connectionTo: e.connectionTo ? e.connectionTo : true
+            connectionTo: e.connectionTo ? e.connectionTo : true,
+            type: e.type
           };
         });
 
@@ -154,7 +155,8 @@ class HappiGraph extends PolymerElement {
             from: this.nodes.find(n => n.id === e.from),
             to: this.nodes.find(n => n.id === e.to),
             connectionFrom: e.connectionFrom,
-            connectionTo: e.connectionTo
+            connectionTo: e.connectionTo,
+            type: e.type
           };
         })
       ];
