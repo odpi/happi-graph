@@ -1,6 +1,6 @@
 {
   "name": "happi-graph",
-  "version": "2.8.1",
+  "version": "2.8.2",
   "description": "Happi Graph Web Component using Polymer 3.0",
   "main": "happi-graph.js",
   "scripts": {
