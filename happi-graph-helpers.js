@@ -113,6 +113,7 @@ export const addProperties = (nodeGroup, iconsMap) => {
         if (d.properties) {
           let labelHeight = 80;
           let iconHeight = 80;
+          let PROPERTY_MAX_LENGTH = 14;
 
           for (const p of d.properties) {
             let propertyGroup = selection.append('g').classed('property-group', true);
@@ -124,7 +125,7 @@ export const addProperties = (nodeGroup, iconsMap) => {
                             .attr('data-label-height', labelHeight)
                             .attr('data-value', p.value)
                             .classed('property', true)
-                            .text(() => p.value.length > 10 ? `${p.value.substring(0, 10)}...` : p.value);
+                            .text(() => p.value.length > PROPERTY_MAX_LENGTH ? `${p.value.substring(0, PROPERTY_MAX_LENGTH)}...` : p.value);
 
             property
               .on('mouseover', function (d) {
@@ -133,7 +134,7 @@ export const addProperties = (nodeGroup, iconsMap) => {
 
                 let textLength = parseInt(currentNode.attr('data-text-length'));
 
-                if(textLength > 10) {
+                if(textLength > PROPERTY_MAX_LENGTH) {
                   let dataLabelHeight = parseInt(currentNode.attr('data-label-height'));
                   let value = currentNode.attr('data-value');
 

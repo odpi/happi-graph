@@ -22,6 +22,21 @@ let edges = [
 
 // */
 
+/*
+ * Current implementation example flow on the parsing algorithm.
+ *
+
+                                              -> anotherNode(-1, 1) -> anotherAnotherNode(-1, 2)
+                                             /                         ^
+     secondPart(0, -1) -> selectedNode(0, 0) -> firstPart (0, 1)      /
+           ^             \                   \                       /
+            \             \                   -> oneMoreHere (1, 1) /
+             \             \                   \
+              \             ---------------------> twoOne (2, 1) |
+               \                                                /
+                 \ ------------------------------------------- /
+*/
+
 function mapped(_data) {
   let result = {};
 
