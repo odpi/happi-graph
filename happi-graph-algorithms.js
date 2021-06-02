@@ -128,9 +128,9 @@ function calc(_startNode, _data, orientation) {
 
         coords = incrementCoords(coords, orientation, linksCount);
 
-        if (!_data[linkedNode].visited) {
+        // if (!_data[linkedNode].visited) {
           linksFromExplore.push(_data[linkedNode]);
-        }
+        // }
       });
     }
 
@@ -154,9 +154,9 @@ function calc(_startNode, _data, orientation) {
 
           coords = incrementCoords(coords, orientation, linksCount);
 
-          if (!_data[linkedNode].visited) {
+          // if (!_data[linkedNode].visited) {
             linksToExplore.push(_data[linkedNode]);
-          }
+          // }
         });
       }
     }
