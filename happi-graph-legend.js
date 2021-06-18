@@ -59,6 +59,9 @@ class HappiGraphLegend extends PolymerElement {
         ...this.labels,
         ...Object.keys(propertiesMap)
       ]
+
+      // makes it unique array
+      this.labels = [...new Set(this.labels.map(item => item))];
     }
   }
 
@@ -80,6 +83,8 @@ class HappiGraphLegend extends PolymerElement {
         ...this.labels,
         ...Object.keys(propertiesMap)
       ];
+
+      this.labels = [...new Set(this.labels.map(item => item))];
     } else {
       this.labels = [];
     }
