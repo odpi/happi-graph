@@ -12,6 +12,9 @@ import {
   isSelected
 } from './happi-graph-helpers';
 
+import 'elkjs/lib/elk-api';
+import 'vis-network/dist/vis-network';
+
 class HappiGraph extends PolymerElement {
   constructor() {
     super();
@@ -25,6 +28,14 @@ class HappiGraph extends PolymerElement {
       debug: {
         type: Boolean,
         value: false
+      },
+      algorithm: {
+        type: String,
+        value: 'ELK'
+      },
+      elkWorkerUrl: {
+        type: String,
+        value: '../node_modules/elkjs/lib/elk-worker.js'
       },
       iconsMap: {
         type: Object,
@@ -126,48 +137,190 @@ class HappiGraph extends PolymerElement {
           ]
         };
 
-        this.links = newGraphData.links.map(e => {
-          return {
-            id: `${e.from}-${e.to}`,
-            label: e.label,
-            from: e.from,
-            to: e.to,
-            connectionFrom: e.connectionFrom ? e.connectionFrom : false,
-            connectionTo: e.connectionTo ? e.connectionTo : true,
-            type: e.type
-          };
-        });
-
         return result;
       });
 
-      let selectedNode = this.nodes.filter(n => n.selected === true).pop();
-
-      this.nodes = selectedNode ?
-                   [...compute(selectedNode.id, this.nodes, this.links, this.graphDirection) ] :
-                   [];
-
       this.links = [
-        ...this.links.map(e => {
+        ...newGraphData.links.map(e => {
           return {
             id: `${e.from}-${e.to}`,
             label: e.label,
-            from: this.nodes.find(n => n.id === e.from),
-            to: this.nodes.find(n => n.id === e.to),
-            connectionFrom: e.connectionFrom,
-            connectionTo: e.connectionTo,
+
+            from: this.nodes.filter(n => n.id === e.from).pop(),
+            to: this.nodes.filter(n => n.id === e.to).pop(),
+
+            source: e.from,
+            target: e.to,
+
+            connectionFrom: e.connectionFrom ? e.connectionFrom : false,
+            connectionTo: e.connectionTo ? e.connectionTo : true,
+
             type: e.type
           };
         })
       ];
 
-      this.initGraph();
-      this.addNodes();
-      this.addLinks();
-      this.centerGraph();
+      switch(this.algorithm) {
+        case 'ELK':
+          this.elkApproach();
+
+          break;
+        case 'VISJS':
+          this.visApproach();
+
+          break;
+        case 'CUSTOM':
+          this.initialApproach();
+
+          break;
+        default:
+          console.log('NO_ALGORITHM_SELECTED');
+
+          break;
+      }
     } else {
       console.log('NEW_DATA_EMPTY');
     }
+  }
+
+  initialApproach() {
+    let selectedNode = this.nodes.filter(n => n.selected === true).pop();
+
+    this.nodes = selectedNode ?
+                 [...compute(selectedNode.id, this.nodes, this.links, this.graphDirection) ] :
+                 [];
+
+    this.initGraph();
+    this.addNodes();
+    this.addLinks();
+    this.centerGraph();
+  }
+
+  visApproach() {
+    let nodeMap = {};
+
+    var nodes = new vis.DataSet([
+      ...this.nodes.map(n => {
+        let _node = {
+          ...n,
+          value2: n.value
+        };
+
+        nodeMap[n.id] = _node;
+
+        return _node;
+      })
+    ]);
+
+    var edges = new vis.DataSet([
+      ...this.links.map(e => {
+        return {
+          from: e.from.id,
+          to: e.to.id
+        }
+      })
+    ]);
+
+   // /*
+   var options = {
+      autoResize: true,
+    	physics:{
+      	enabled:false,
+      	hierarchicalRepulsion: {
+        	avoidOverlap: 1,
+      	}
+      },
+      edges: {
+        arrows: {
+          to: {
+            scaleFactor: 1
+          }
+        }
+      },
+      layout: {
+        improvedLayout: false,
+        hierarchical: {
+          enabled:true,
+          levelSeparation: 450,
+          nodeSpacing: 350,
+          treeSpacing: 200,
+          direction: this.graphDirection === 'HORIZONTAL' ? 'RL' : 'DU', // UD, DU, LR, RL
+          sortMethod: 'directed',  // hubsize, directed
+          shakeTowards: 'leaves'  // roots, leaves
+         }
+      }
+    };
+
+    let data = {
+      nodes: nodes,
+      edges: edges
+    }
+
+    let e = document.createElement('div');
+
+    var network = new vis.Network(e, data, options);
+
+    let positions = network.getPositions();
+
+    this.nodes = Object.keys(positions).map(id => {
+      return {
+        ...nodeMap[id],
+        value: nodeMap[id].value2, // VisJS is somehow updating this value
+        x: positions[id].x,
+        y: positions[id].y
+      };
+    });
+
+    this.links = this.links.map(l => {
+      return {
+        ...l,
+        from: this.nodes.filter(n => n.id === l.from.id).pop(),
+        to: this.nodes.filter(n => n.id === l.to.id).pop()
+      }
+    });
+
+    console.log(this.nodes, this.links);
+
+    this.initGraph();
+    this.addNodes();
+    this.addLinks();
+    this.centerGraph();
+  }
+
+  elkApproach() {
+    const elk = new ELK({
+      workerUrl: this.elkWorkerUrl
+    });
+
+    const graph = {
+      id: "root",
+      layoutOptions: {
+        "elk.algorithm": "layered",
+        "elk.spacing.nodeNode": 200,
+        "elk.layered.spacing.baseValue": 150,
+        "elk.direction": this.graphDirection === 'HORIZONTAL' ? 'RIGHT' : 'UP'
+      },
+      children: [
+        ...this.nodes
+      ],
+      edges: [
+        ...this.links
+      ]
+    }
+
+    elk.layout(graph)
+      .then((g) => {
+        console.log(g)
+
+        this.nodes = [ ...g.children ];
+        this.links = [ ...g.edges ];
+
+        this.initGraph();
+        this.addNodes();
+        this.addLinks();
+        this.centerGraph();
+      })
+      // .catch(console.error)
   }
 
   removeData() {
@@ -291,7 +444,7 @@ class HappiGraph extends PolymerElement {
       .attr('x1', (d) => self.graphDirection === 'HORIZONTAL' ? d.from.x + d.from.width + 3 : d.from.x + (d.from.width/2))
       .attr('y1', (d) => self.graphDirection === 'HORIZONTAL' ? d.from.y + (d.from.height/2) : d.from.y - 3)
       .attr('x2', (d) => self.graphDirection === 'HORIZONTAL' ? d.to.x - 5 : d.to.x + (d.to.width/2))
-      .attr('y2', (d) => self.graphDirection === 'HORIZONTAL' ? d.to.y + (d.to.height/2): d.to.y + (d.to.height) + 5);
+      .attr('y2', (d) => self.graphDirection === 'HORIZONTAL' ? d.to.y + (d.to.height/2) : d.to.y + (d.to.height) + 5);
   }
 
   zooming() {
