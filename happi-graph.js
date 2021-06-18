@@ -244,7 +244,7 @@ class HappiGraph extends PolymerElement {
           levelSeparation: 450,
           nodeSpacing: 350,
           treeSpacing: 200,
-          direction: this.graphDirection === 'HORIZONTAL' ? 'RL' : 'DU', // UD, DU, LR, RL
+          direction: this.graphDirection === 'HORIZONTAL' ? 'LR' : 'DU', // UD, DU, LR, RL
           sortMethod: 'directed',  // hubsize, directed
           shakeTowards: 'leaves'  // roots, leaves
          }
