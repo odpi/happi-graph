@@ -27,6 +27,10 @@ class HappiGraphLegend extends PolymerElement {
         type: Object,
         value: []
       },
+      linkLabels: {
+        type: Object,
+        value: []
+      },
       graphNodes: {
         type: Object,
         value: {},
@@ -46,22 +50,26 @@ class HappiGraphLegend extends PolymerElement {
 
   _graphLinksUpdate(newGraphLinks) {
     let propertiesMap = {};
+    let labelsMap = {};
     let _links = newGraphLinks;
 
     if(_links.length) {
       _links.map(l => {
-        if(l.type && this.linksTypeIconMap[l.type]) {
-          propertiesMap[l.type] = this.linksTypeIconMap[l.type].icon;
-        }
+          if (l.type && this.linksTypeIconMap[l.type]) {
+              propertiesMap[l.type] = this.linksTypeIconMap[l.type].icon;
+              labelsMap[l.type] = {
+                  label: this.linksTypeIconMap[l.type].label,
+                  iconName: l.type
+              }
+          }
       });
-
-      this.labels = [
-        ...this.labels,
-        ...Object.keys(propertiesMap)
+      this.linkLabels = [
+        ...this.linkLabels,
+        ...Object.values(labelsMap)
       ]
 
       // makes it unique array
-      this.labels = [...new Set(this.labels.map(item => item))];
+      this.linkLabels = [...new Set(this.linkLabels.map(item => item))];
     }
   }
 
@@ -128,6 +136,17 @@ class HappiGraphLegend extends PolymerElement {
           display: flex;
           flex-flow: row wrap;
           justify-content: space-around;
+
+          border-bottom: 1px solid black;
+        }
+
+        .icon-title {
+          color: var(--happi-graph-secondary-color);
+          background: rgb(var(--happi-graph-primary-color-rgb), 0.9);
+          padding: 10px;
+          max-width: 400px;
+          font-weight: bold;
+          text-align: center;
         }
 
         .svg-icon {
@@ -190,6 +209,7 @@ class HappiGraphLegend extends PolymerElement {
       </paper-button>
 
       <template is="dom-if" if="[[ isMinimized ]]" restamp="true">
+        <div class="icon-title">Entities</div>
         <div class="svg-icons">
           <template is="dom-repeat" items="{{ labels }}">
             <div class="svg-icon">
@@ -198,6 +218,18 @@ class HappiGraphLegend extends PolymerElement {
               <span>[[ item ]]</span>
             </div>
           </template>
+         
+        </div>
+        <div class="icon-title">Relationships</div>
+        
+        <div class="svg-icons">
+          <template is="dom-repeat" items="{{ linkLabels }}">
+            <div class="svg-icon">
+              <img src="data:image/svg+xml;utf8,[[ getIcon(item.iconName) ]]"/>
+              <span>[[ item.label ]]</span>
+            </div>
+          </template>
+
         </div>
       </template>
     `;
