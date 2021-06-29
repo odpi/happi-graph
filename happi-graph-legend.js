@@ -49,14 +49,12 @@ class HappiGraphLegend extends PolymerElement {
   }
 
   _graphLinksUpdate(newGraphLinks) {
-    let propertiesMap = {};
     let labelsMap = {};
     let _links = newGraphLinks;
 
     if(_links.length) {
       _links.map(l => {
           if (l.type && this.linksTypeIconMap[l.type]) {
-              propertiesMap[l.type] = this.linksTypeIconMap[l.type].icon;
               labelsMap[l.type] = {
                   label: this.linksTypeIconMap[l.type].label,
                   iconName: l.type
