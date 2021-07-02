@@ -31,11 +31,11 @@ class HappiGraph extends PolymerElement {
       },
       algorithm: {
         type: String,
-        value: 'ELK'
+        value: 'VISJS'
       },
       elkWorkerUrl: {
         type: String,
-        value: '../node_modules/elkjs/lib/elk-worker.js'
+        value: '/node_modules/elkjs/lib/elk-worker.js'
       },
       iconsMap: {
         type: Object,
