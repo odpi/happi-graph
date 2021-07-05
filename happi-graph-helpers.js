@@ -113,7 +113,7 @@ export const addProperties = (nodeGroup, iconsMap) => {
         if (d.properties) {
           let labelHeight = 80;
           let iconHeight = 80;
-          let PROPERTY_MAX_LENGTH = 14;
+          let PROPERTY_MAX_LENGTH = 20;
 
           for (const p of d.properties) {
             let propertyGroup = selection.append('g').classed('property-group', true);
