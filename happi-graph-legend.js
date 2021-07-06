@@ -135,7 +135,11 @@ class HappiGraphLegend extends PolymerElement {
 
   getLabel(group) {
     return group;
-    }
+  }
+
+  hasLinkLabels() {
+    return this.legendData.linkLabels.entities.length > 0
+  }
 
   static get template() {
     return html`
@@ -245,17 +249,20 @@ class HappiGraphLegend extends PolymerElement {
           </template>
          
         </div>
-        <div class="icon-title">[[getLabel(legendData.linkLabels.group)]]</div>
-        
-        <div class="svg-icons">
-          <template is="dom-repeat" items="{{ legendData.linkLabels.entities }}">
-            <div class="svg-icon">
-              <img src="data:image/svg+xml;utf8,[[ getIcon(item.iconName) ]]"/>
-              <span>[[ item.label ]]</span>
-            </div>
-          </template>
 
-        </div>
+        <template is="dom-if" if="[[hasLinkLabels()]]">
+          <div class="icon-title">[[getLabel(legendData.linkLabels.group)]]</div>
+          
+          <div class="svg-icons">
+            <template is="dom-repeat" items="{{ legendData.linkLabels.entities }}">
+              <div class="svg-icon">
+                <img src="data:image/svg+xml;utf8,[[ getIcon(item.iconName) ]]"/>
+                <span>[[ item.label ]]</span>
+              </div>
+            </template>
+  
+          </div>
+        </template
       </template>
     `;
   }
