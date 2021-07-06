@@ -23,13 +23,16 @@ class HappiGraphLegend extends PolymerElement {
         type: Object,
         value: {}
       },
-      labels: {
+      legendData: {
         type: Object,
-        value: []
-      },
-      linkLabels: {
-        type: Object,
-        value: []
+        value: {
+          labels: {
+            entities : []
+          },
+          linkLabels: {
+            entities : []
+          }
+        }
       },
       graphNodes: {
         type: Object,
@@ -51,7 +54,7 @@ class HappiGraphLegend extends PolymerElement {
   _graphLinksUpdate(newGraphLinks) {
     let labelsMap = {};
     let _links = newGraphLinks;
-
+    let linkLabels = [];
     if(_links.length) {
       _links.map(l => {
           if (l.type && this.linksTypeIconMap[l.type]) {
@@ -61,20 +64,35 @@ class HappiGraphLegend extends PolymerElement {
               }
           }
       });
-      this.linkLabels = [
-        ...this.linkLabels,
-        ...Object.values(labelsMap)
-      ]
 
+      if (this.legendData.linkLabels) {
+        linkLabels = [
+          ...this.legendData.linkLabels.entities,
+          ...Object.values(labelsMap)
+        ]
+      } else {
+        linkLabels = [
+          ...Object.values(labelsMap)
+        ]
+      }
       // makes it unique array
-      this.linkLabels = [...new Set(this.linkLabels.map(item => item))];
+      linkLabels = [...new Set(linkLabels.map(item => item))];
+
+      this.legendData = {
+        ...this.legendData,
+        linkLabels: {
+          entities: linkLabels,
+          group: this.linksTypeIconMap.group
+        }
+      };
+
     }
   }
 
   _graphNodesUpdate(newGraphNodes) {
     let _nodes = newGraphNodes;
     let propertiesMap = {};
-
+    let labels = [];
     if(_nodes.length) {
 
       _nodes.map(n => {
@@ -84,15 +102,20 @@ class HappiGraphLegend extends PolymerElement {
           propertiesMap[p.groupName] = p.icon;
         });
       });
-
-      this.labels = [
-        ...this.labels,
+      labels = [
+        ...this.legendData.labels.entities,
         ...Object.keys(propertiesMap)
       ];
 
-      this.labels = [...new Set(this.labels.map(item => item))];
+      labels = [...new Set(labels.map(item => item))];
     } else {
-      this.labels = [];
+      labels = [];
+    }
+    this.legendData = {
+      labels: {
+        entities: labels,
+        group: this.propertiesMap.group
+      }
     }
   }
 
@@ -109,6 +132,10 @@ class HappiGraphLegend extends PolymerElement {
       return simpleSquareIcon;
     }
   }
+
+  getLabel(group) {
+    return group;
+    }
 
   static get template() {
     return html`
@@ -207,9 +234,9 @@ class HappiGraphLegend extends PolymerElement {
       </paper-button>
 
       <template is="dom-if" if="[[ isMinimized ]]" restamp="true">
-        <div class="icon-title">Entities</div>
+        <div class="icon-title">[[getLabel(legendData.labels.group)]]</div>
         <div class="svg-icons">
-          <template is="dom-repeat" items="{{ labels }}">
+          <template is="dom-repeat" items="{{ legendData.labels.entities }}">
             <div class="svg-icon">
               <img src="data:image/svg+xml;utf8,[[ getIcon(item) ]]"/>
 
@@ -218,10 +245,10 @@ class HappiGraphLegend extends PolymerElement {
           </template>
          
         </div>
-        <div class="icon-title">Relationships</div>
+        <div class="icon-title">[[getLabel(legendData.linkLabels.group)]]</div>
         
         <div class="svg-icons">
-          <template is="dom-repeat" items="{{ linkLabels }}">
+          <template is="dom-repeat" items="{{ legendData.linkLabels.entities }}">
             <div class="svg-icon">
               <img src="data:image/svg+xml;utf8,[[ getIcon(item.iconName) ]]"/>
               <span>[[ item.label ]]</span>
