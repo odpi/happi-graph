@@ -1,12 +1,9 @@
-import {
-  PolymerElement,
-  html
-} from '@polymer/polymer/polymer-element.js';
+import {html, PolymerElement} from '@polymer/polymer/polymer-element.js';
 
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/paper-button/paper-button.js';
-
-import { simpleSquareIcon } from './happi-graph-helpers';
+import { pluralize } from '@capaj/pluralize';
+import {simpleSquareIcon} from './happi-graph-helpers';
 
 class HappiGraphLegend extends PolymerElement {
   static get properties() {
@@ -25,14 +22,7 @@ class HappiGraphLegend extends PolymerElement {
       },
       legendData: {
         type: Object,
-        value: {
-          labels: {
-            entities : []
-          },
-          linkLabels: {
-            entities : []
-          }
-        }
+        value: {}
       },
       graphNodes: {
         type: Object,
@@ -52,70 +42,34 @@ class HappiGraphLegend extends PolymerElement {
   }
 
   _graphLinksUpdate(newGraphLinks) {
-    let labelsMap = {};
     let _links = newGraphLinks;
-    let linkLabels = [];
-    if(_links.length) {
+    if (_links.length) {
       _links.map(l => {
-          if (l.type && this.linksTypeIconMap[l.type]) {
-              labelsMap[l.type] = {
-                  label: this.linksTypeIconMap[l.type].label,
-                  iconName: l.type
-              }
+        if (l.type && this.linksTypeIconMap[l.type]) {
+          let group = this.linksTypeIconMap[l.type].group
+          if (!this.legendData[group]) {
+            this.legendData[group] = [];
           }
-      });
-
-      if (this.legendData.linkLabels) {
-        linkLabels = [
-          ...this.legendData.linkLabels.entities,
-          ...Object.values(labelsMap)
-        ]
-      } else {
-        linkLabels = [
-          ...Object.values(labelsMap)
-        ]
-      }
-      // makes it unique array
-      linkLabels = [...new Set(linkLabels.map(item => item))];
-
-      this.legendData = {
-        ...this.legendData,
-        linkLabels: {
-          entities: linkLabels,
-          group: this.linksTypeIconMap.group
+          this.legendData[group][this.linksTypeIconMap[l.type].label] = l.type;
         }
-      };
-
+      });
     }
   }
 
   _graphNodesUpdate(newGraphNodes) {
     let _nodes = newGraphNodes;
-    let propertiesMap = {};
-    let labels = [];
-    if(_nodes.length) {
-
+    if (_nodes.length) {
       _nodes.map(n => {
-        propertiesMap[n.label] = n.icon;
-
+        let group = this.propertiesMap[n.label].group
+        if (!this.legendData[group]) {
+          this.legendData[group] = [];
+        }
+        this.legendData[group][n.label] = n.label;
         n.properties.map(p => {
-          propertiesMap[p.groupName] = p.icon;
+          let propertiesGroup = this.propertiesMap[p.groupName].group
+          this.legendData[propertiesGroup][p.groupName] = p.groupName;
         });
       });
-      labels = [
-        ...this.legendData.labels.entities,
-        ...Object.keys(propertiesMap)
-      ];
-
-      labels = [...new Set(labels.map(item => item))];
-    } else {
-      labels = [];
-    }
-    this.legendData = {
-      labels: {
-        entities: labels,
-        group: this.propertiesMap.group
-      }
     }
   }
 
@@ -123,22 +77,27 @@ class HappiGraphLegend extends PolymerElement {
     this.isMinimized = !this.isMinimized;
   }
 
-  getIcon(key) {
-    if((this.propertiesMap[key] && this.iconsMap[this.propertiesMap[key].icon])) {
-      return this.iconsMap[this.propertiesMap[key].icon];
-    } else if (this.linksTypeIconMap[key] && this.iconsMap[this.linksTypeIconMap[key].icon]) {
-      return this.iconsMap[this.linksTypeIconMap[key].icon];
+  getIcon(type, label) {
+    let iconName = this.legendData[type][label];
+    if ((this.propertiesMap[iconName] && this.iconsMap[this.propertiesMap[iconName].icon])) {
+      return this.iconsMap[this.propertiesMap[iconName].icon];
+    } else if (this.linksTypeIconMap[iconName] && this.iconsMap[this.linksTypeIconMap[iconName].icon]) {
+      return this.iconsMap[this.linksTypeIconMap[iconName].icon];
     } else {
       return simpleSquareIcon;
     }
   }
 
   getLabel(group) {
-    return group;
+    return pluralize(group);
   }
 
-  hasLinkLabels() {
-    return this.legendData.linkLabels.entities.length > 0
+  getLegendCategories() {
+    return Object.keys(this.legendData);
+  }
+
+  getLegendLabels(legendKey) {
+    return [...new Set(Object.keys(this.legendData[legendKey]))];
   }
 
   static get template() {
@@ -238,31 +197,17 @@ class HappiGraphLegend extends PolymerElement {
       </paper-button>
 
       <template is="dom-if" if="[[ isMinimized ]]" restamp="true">
-        <div class="icon-title">[[getLabel(legendData.labels.group)]]</div>
-        <div class="svg-icons">
-          <template is="dom-repeat" items="{{ legendData.labels.entities }}">
-            <div class="svg-icon">
-              <img src="data:image/svg+xml;utf8,[[ getIcon(item) ]]"/>
-
-              <span>[[ item ]]</span>
-            </div>
-          </template>
-         
-        </div>
-
-        <template is="dom-if" if="[[hasLinkLabels()]]">
-          <div class="icon-title">[[getLabel(legendData.linkLabels.group)]]</div>
-          
+        <template is="dom-repeat" items="{{ getLegendCategories() }}" as="legendKey">
+          <div class="icon-title">[[getLabel(legendKey)]]</div>
           <div class="svg-icons">
-            <template is="dom-repeat" items="{{ legendData.linkLabels.entities }}">
+            <template is="dom-repeat" items="{{ getLegendLabels(legendKey) }}" as="label">
               <div class="svg-icon">
-                <img src="data:image/svg+xml;utf8,[[ getIcon(item.iconName) ]]"/>
-                <span>[[ item.label ]]</span>
+                <img src="data:image/svg+xml;utf8,[[ getIcon(legendKey, label) ]]"/>
+                <span>[[ label ]]</span>
               </div>
             </template>
-  
           </div>
-        </template
+        </template>
       </template>
     `;
   }

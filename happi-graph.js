@@ -668,6 +668,7 @@ class HappiGraph extends PolymerElement {
                                 graph-links="{{ links }}"
                                 icons-map="{{ iconsMap }}"
                                 properties-map="{{ propertiesMap }}"
+                                legend-data = "{}"
                                 links-type-icon-map="{{ linksTypeIconMap }}"></happi-graph-legend>
           </div>
         </template>
