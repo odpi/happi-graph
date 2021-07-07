@@ -35,7 +35,7 @@ class HappiGraph extends PolymerElement {
       },
       elkWorkerUrl: {
         type: String,
-        value: '/node_modules/elkjs/lib/elk-worker.js'
+        value: '/node_modules/elkjs/lib/elk-worker.min.js'
       },
       iconsMap: {
         type: Object,
