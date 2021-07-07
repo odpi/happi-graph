@@ -31,7 +31,7 @@ class HappiGraph extends PolymerElement {
       },
       algorithm: {
         type: String,
-        value: 'VISJS'
+        value: 'ELK'
       },
       elkWorkerUrl: {
         type: String,
@@ -84,6 +84,10 @@ class HappiGraph extends PolymerElement {
       graphData: {
         type: Object,
         value: null
+      },
+      isLoading: {
+        type: Boolean,
+        value: false
       }
     };
   }
@@ -162,7 +166,13 @@ class HappiGraph extends PolymerElement {
 
       switch(this.algorithm) {
         case 'ELK':
-          this.elkApproach();
+          if(this.graphDirection === 'VERTICAL') {
+            this.visApproach();
+          }
+
+          if(this.graphDirection === 'HORIZONTAL') {
+            this.elkApproach();
+          }
 
           break;
         case 'VISJS':
@@ -308,12 +318,16 @@ class HappiGraph extends PolymerElement {
       ]
     }
 
+    this.isLoading = true;
+
     elk.layout(graph)
       .then((g) => {
         console.log(g)
 
         this.nodes = [ ...g.children ];
         this.links = [ ...g.edges ];
+
+        this.isLoading = false;
 
         this.initGraph();
         this.addNodes();
@@ -633,6 +647,13 @@ class HappiGraph extends PolymerElement {
           top:5px;
           left:5px;
         }
+
+        .is-loading {
+          margin: 0 auto;
+          position: relative;
+          top: 40%;
+          text-align:center;
+        }
       </style>
 
       <div class="happi-graph-container">
@@ -683,6 +704,10 @@ class HappiGraph extends PolymerElement {
 
             <slot name="post-actions"></slot>
           </div>
+        </template>
+
+        <template is="dom-if" if="[[ isLoading ]]">
+          <div class="is-loading">Calculating...</div>
         </template>
       </div>
     `;
