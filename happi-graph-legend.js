@@ -66,8 +66,10 @@ class HappiGraphLegend extends PolymerElement {
         }
         this.legendData[group][n.label] = n.label;
         n.properties.map(p => {
-          let propertiesGroup = this.propertiesMap[p.groupName].group
-          this.legendData[propertiesGroup][p.groupName] = p.groupName;
+          if (this.propertiesMap[p.groupName]){
+            let propertiesGroup = this.propertiesMap[p.groupName].group
+            this.legendData[propertiesGroup][p.groupName] = p.groupName;
+          }
         });
       });
     }
