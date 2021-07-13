@@ -201,3 +201,76 @@ export const getNodeHeight = (length) => {
 
   return defaultHeight + computedHeight;
 };
+
+export const relativeTo = (nodeA, nodeB) => {
+  // b is to a's LEFT
+  if(((nodeA.x - nodeB.x) > 0) && ((nodeA.y - nodeB.y) === 0)) {
+    return { a: 'LEFT', b: 'RIGHT' };
+  }
+
+  // b is to a's RIGHT
+  if(((nodeA.x - nodeB.x) < 0) && ((nodeA.y - nodeB.y) === 0)) {
+    return { a: 'RIGHT', b: 'LEFT' };
+  }
+
+  // b is to a's TOP
+  if(((nodeA.x - nodeB.x) === 0) && ((nodeA.y - nodeB.y) < 0)) {
+    return { a: 'TOP', b: 'BOTTOM' };
+  }
+
+  // b is to a's BOTTOM
+  if(((nodeA.x - nodeB.x) === 0) && ((nodeA.y - nodeB.y) > 0)) {
+    return { a: 'BOTTOM', b: 'TOP' };
+  }
+
+  // b is to a's TOP RIGHT
+  if(((nodeA.x - nodeB.x) < 0) && ((nodeA.y - nodeB.y) < 0)) {
+    return { a: 'RIGHT', b: 'LEFT' };
+  }
+
+  // b is to a's BOTTOM RIGHT
+  if(((nodeA.x - nodeB.x) < 0) && ((nodeA.y - nodeB.y) > 0)) {
+    return { a: 'RIGHT', b: 'LEFT' };
+  }
+
+  // b is to a's BOTTOM LEFT
+  if(((nodeA.x - nodeB.x) > 0) && ((nodeA.y - nodeB.y) > 0)) {
+    return { a: 'LEFT', b: 'RIGHT' };
+  }
+
+  // b is to a's TOP LEFT
+  if(((nodeA.x - nodeB.x) > 0) && ((nodeA.y - nodeB.y) < 0)) {
+    return { a: 'LEFT', b: 'RIGHT' };
+  }
+};
+
+export const getNodeAnchorPoint = (node, point) => {
+  let { width, height } = node;
+
+  switch(point) {
+    case 'TOP':
+      return { x: node.x + (width / 2), y: node.y };
+    case 'BOTTOM':
+      return { x: node.x + (width / 2), y: node.y - height };
+    case 'LEFT':
+      return { x: node.x, y: node.y + (height / 2)};
+    case 'RIGHT':
+      return { x: node.x + width, y: node.y + (height / 2)};
+    default:
+      console.log('WRONG_ANCHOR_POINT_SELECTED');
+      break;
+  }
+};
+
+export const getLinkCoordinates = (nodeA, nodeB) => {
+  let _relativeTo = relativeTo(nodeA, nodeB);
+
+  let from = getNodeAnchorPoint(nodeA, _relativeTo.a);
+  let to = getNodeAnchorPoint(nodeB, _relativeTo.b);
+
+  return {
+    from: { x: from.x, y: from.y },
+    to: { x: to.x, y: to.y }
+  };
+};
+

@@ -9,7 +9,8 @@ import {
   addIcon,
   addProperties,
   getNodeHeight,
-  isSelected
+  isSelected,
+  getLinkCoordinates
 } from './happi-graph-helpers';
 
 import 'elkjs/lib/elk-api';
@@ -407,15 +408,23 @@ class HappiGraph extends PolymerElement {
                   .filter(function(_d) {
                     return _d.from.id === d.id;
                   })
-                  .attr('x1', () => self.graphDirection === 'HORIZONTAL' ? d3.event.x + d.width + 3 : d3.event.x + (d.width/2))
-                  .attr('y1', () => self.graphDirection === 'HORIZONTAL' ? d3.event.y + (d.height/2) : d3.event.y - 3);
+                  .attr('x1', () => {
+                    return self.graphDirection === 'HORIZONTAL' ? d3.event.x + d.width + 3 : d3.event.x + (d.width/2);
+                  })
+                  .attr('y1', () => {
+                    return self.graphDirection === 'HORIZONTAL' ? d3.event.y + (d.height/2) : d3.event.y - 3;
+                  });
 
                 _links
                   .filter(function(_d) {
                     return _d.to.id === d.id;
                   })
-                  .attr('x2', () => self.graphDirection === 'HORIZONTAL' ? d3.event.x - 5 : d3.event.x + (d.width/2))
-                  .attr('y2', () => self.graphDirection === 'HORIZONTAL' ? d3.event.y + (d.height/2) : d3.event.y + (d.height) + 5);
+                  .attr('x2', () => {
+                    return self.graphDirection === 'HORIZONTAL' ? d3.event.x - 5 : d3.event.x + (d.width/2);
+                  })
+                  .attr('y2', () => {
+                    return self.graphDirection === 'HORIZONTAL' ? d3.event.y + (d.height/2) : d3.event.y + (d.height) + 5;
+                  });
             })
             .on('end', (d) => {
               // console.log('DRAG_END', d);
@@ -455,10 +464,34 @@ class HappiGraph extends PolymerElement {
       .attr('marker-end', (d) => (d.connectionTo) ? 'url(#arrow-end)' : null)
       .attr('from', function(d) { return d.from.id; })
       .attr('to', function(d) { return d.to.id; })
-      .attr('x1', (d) => self.graphDirection === 'HORIZONTAL' ? d.from.x + d.from.width + 3 : d.from.x + (d.from.width/2))
-      .attr('y1', (d) => self.graphDirection === 'HORIZONTAL' ? d.from.y + (d.from.height/2) : d.from.y - 3)
-      .attr('x2', (d) => self.graphDirection === 'HORIZONTAL' ? d.to.x - 5 : d.to.x + (d.to.width/2))
-      .attr('y2', (d) => self.graphDirection === 'HORIZONTAL' ? d.to.y + (d.to.height/2) : d.to.y + (d.to.height) + 5);
+      .attr('x1', (d) => {
+        let { from, to } = getLinkCoordinates(d.from, d.to);
+
+        return from.x;
+
+        // return self.graphDirection === 'HORIZONTAL' ? d.from.x + d.from.width + 3 : d.from.x + (d.from.width/2);
+      })
+      .attr('y1', (d) => {
+        let { from, to } = getLinkCoordinates(d.from, d.to);
+
+        return from.y;
+
+        // return self.graphDirection === 'HORIZONTAL' ? d.from.y + (d.from.height/2) : d.from.y - 3;
+      })
+      .attr('x2', (d) => {
+        let { from, to } = getLinkCoordinates(d.from, d.to);
+
+        return to.x;
+
+        // return self.graphDirection === 'HORIZONTAL' ? d.to.x - 5 : d.to.x + (d.to.width/2);
+      })
+      .attr('y2', (d) => {
+        let { from, to } = getLinkCoordinates(d.from, d.to);
+
+        return to.y;
+
+        // return self.graphDirection === 'HORIZONTAL' ? d.to.y + (d.to.height/2) : d.to.y + (d.to.height) + 5;
+      });
   }
 
   zooming() {
