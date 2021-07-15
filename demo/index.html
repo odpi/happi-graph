@@ -53,6 +53,11 @@
     <button id="add-data">add-data</button>
   </div>
 
+
+  <div class="container bordered">
+    <happi-graph id="happi-graph-four"></happi-graph>
+  </div>
+
   <div class="container bordered">
     <happi-graph id="happi-graph"></happi-graph>
   </div>
@@ -77,6 +82,36 @@
       },
       ...itemGroupIconMap
     };
+
+    let dataFour = {
+      graphDirection: 'HORIZONTAL',
+      selectedNodeId: 1,
+      nodes: [
+        { id: 1, label: 'Node 1', group: 'GroupName', properties: { GroupName: 'IBS_UTBLIACML' } },
+        { id: 2, label: 'Node 2', group: 'GroupName', properties: {} }
+      ],
+      links: [
+        { from: 1, to: 2, connectionFrom: false, connectionTo: true, type: null },
+      ]
+    }
+
+    let happiGraphInstance4 = document.querySelector('#happi-graph-four');
+    happiGraphInstance4.iconsMap = iconsMap;
+    happiGraphInstance4.propertiesMap = propertiesMap;
+    happiGraphInstance4.linksTypeIconMap = linksTypeIconMap;
+    happiGraphInstance4.algorithm = 'ELK';
+    happiGraphInstance4.elkWorkerUrl = '/node_modules/elkjs/lib/elk-worker.js';
+
+    happiGraphInstance4.graphData = { ...dataFour };
+    happiGraphInstance4.init();
+
+    happiGraphInstance4.addEventListener('happi-graph-on-node-click', ({ detail }) => {
+      console.log(detail);
+    });
+
+
+
+
 
     let data = {
       graphDirection: 'HORIZONTAL',

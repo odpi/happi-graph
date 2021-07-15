@@ -203,70 +203,104 @@ export const getNodeHeight = (length) => {
 };
 
 export const relativeTo = (nodeA, nodeB) => {
-  // b is to a's LEFT
-  if(((nodeA.x - nodeB.x) > 0) && ((nodeA.y - nodeB.y) === 0)) {
-    return { a: 'LEFT', b: 'RIGHT' };
-  }
+  let a = {
+    x1: nodeA.x,
+    y1: nodeA.y,
+    x2: nodeA.x + nodeA.width,
+    y2: nodeA.y + nodeA.height
+  };
 
-  // b is to a's RIGHT
-  if(((nodeA.x - nodeB.x) < 0) && ((nodeA.y - nodeB.y) === 0)) {
+  let b = {
+    x1: nodeB.x,
+    y1: nodeB.y,
+    x2: nodeB.x + nodeB.width,
+    y2: nodeB.y + nodeB.height
+  };
+
+  if((a.x1 < b.x2) && !(a.x2 > b.x1) && (a.y1 < b.y2) && (a.y2 > b.y1)) {
     return { a: 'RIGHT', b: 'LEFT' };
   }
 
-  // b is to a's TOP
-  if(((nodeA.x - nodeB.x) === 0) && ((nodeA.y - nodeB.y) < 0)) {
-    return { a: 'TOP', b: 'BOTTOM' };
+  if((a.x1 < b.x2) && !(a.x2 > b.x1) && !(a.y1 < b.y2) && (a.y2 > b.y1)) {
+    return { a: 'RIGHT', b: 'LEFT' };
   }
 
-  // b is to a's BOTTOM
-  if(((nodeA.x - nodeB.x) === 0) && ((nodeA.y - nodeB.y) > 0)) {
+  if((a.x1 < b.x2) && !(a.x2 > b.x1) && (a.y1 < b.y2) && !(a.y2 > b.y1)) {
+    return { a: 'RIGHT', b: 'LEFT' };
+  }
+
+  if((a.x1 < b.x2) && (a.x2 > b.x1) && (a.y1 < b.y2) && !(a.y2 > b.y1)) {
     return { a: 'BOTTOM', b: 'TOP' };
   }
 
-  // b is to a's TOP RIGHT
-  if(((nodeA.x - nodeB.x) < 0) && ((nodeA.y - nodeB.y) < 0)) {
-    return { a: 'RIGHT', b: 'LEFT' };
-  }
-
-  // b is to a's BOTTOM RIGHT
-  if(((nodeA.x - nodeB.x) < 0) && ((nodeA.y - nodeB.y) > 0)) {
-    return { a: 'RIGHT', b: 'LEFT' };
-  }
-
-  // b is to a's BOTTOM LEFT
-  if(((nodeA.x - nodeB.x) > 0) && ((nodeA.y - nodeB.y) > 0)) {
+  if(!(a.x1 < b.x2) && (a.x2 > b.x1) && (a.y1 < b.y2) && !(a.y2 > b.y1)) {
     return { a: 'LEFT', b: 'RIGHT' };
   }
 
-  // b is to a's TOP LEFT
-  if(((nodeA.x - nodeB.x) > 0) && ((nodeA.y - nodeB.y) < 0)) {
+  if(!(a.x1 < b.x2) && (a.x2 > b.x1) && (a.y1 < b.y2) && (a.y2 > b.y1)) {
     return { a: 'LEFT', b: 'RIGHT' };
+  }
+
+  if(!(a.x1 < b.x2) && (a.x2 > b.x1) && !(a.y1 < b.y2) && (a.y2 > b.y1)) {
+    return { a: 'LEFT', b: 'RIGHT' };
+  }
+
+  if((a.x1 < b.x2) && (a.x2 > b.x1) && !(a.y1 < b.y2) && (a.y2 > b.y1)) {
+    return { a: 'TOP', b: 'BOTTOM' };
+  }
+
+  if((a.x1 < b.x2) && (a.x2 > b.x1) && (a.y1 < b.y2) && (a.y2 > b.y1)) {
+    return { a: 'RIGHT', b: 'RIGHT' };
   }
 };
 
-export const getNodeAnchorPoint = (node, point) => {
+export const getNodeAnchorPoint = (node, point, graphDirection) => {
   let { width, height } = node;
 
   switch(point) {
     case 'TOP':
-      return { x: node.x + (width / 2), y: node.y };
+      if(graphDirection === 'HORIZONTAL') {
+        return { x: node.x + (width / 2), y: node.y };
+      }
+
+      if(graphDirection === 'VERTICAL') {
+        return { x: node.x + (width / 2), y: node.y };
+      }
     case 'BOTTOM':
-      return { x: node.x + (width / 2), y: node.y - height };
+      if(graphDirection === 'HORIZONTAL') {
+        return { x: node.x + (width / 2), y: node.y + height };
+      }
+
+      if(graphDirection === 'VERTICAL') {
+        return { x: node.x + (width / 2), y: node.y + height };
+      }
     case 'LEFT':
-      return { x: node.x, y: node.y + (height / 2)};
+      if(graphDirection === 'HORIZONTAL') {
+        return { x: node.x, y: node.y + (height / 2)};
+      }
+
+      if(graphDirection === 'VERTICAL') {
+        return { x: node.x, y: node.y + (height / 2)};
+      }
     case 'RIGHT':
-      return { x: node.x + width, y: node.y + (height / 2)};
+      if(graphDirection === 'HORIZONTAL') {
+        return { x: node.x + width, y: node.y + (height / 2)};
+      }
+
+      if(graphDirection === 'VERTICAL') {
+        return { x: node.x + width, y: node.y + (height / 2)};
+      }
     default:
       console.log('WRONG_ANCHOR_POINT_SELECTED');
       break;
   }
 };
 
-export const getLinkCoordinates = (nodeA, nodeB) => {
+export const getLinkCoordinates = (nodeA, nodeB, graphDirection) => {
   let _relativeTo = relativeTo(nodeA, nodeB);
 
-  let from = getNodeAnchorPoint(nodeA, _relativeTo.a);
-  let to = getNodeAnchorPoint(nodeB, _relativeTo.b);
+  let from = getNodeAnchorPoint(nodeA, _relativeTo.a, graphDirection);
+  let to = getNodeAnchorPoint(nodeB, _relativeTo.b, graphDirection);
 
   return {
     from: { x: from.x, y: from.y },
