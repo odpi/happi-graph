@@ -582,8 +582,7 @@ class HappiGraph extends PolymerElement {
       new CustomEvent('happi-graph-on-node-click', {
         bubbles: true,
         detail: {
-          x: node.x,
-          y: node.y
+          nodeId: node.id
         }
       })
     );

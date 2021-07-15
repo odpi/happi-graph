@@ -8,6 +8,7 @@
     "build": "polymer build",
     "lint": "polymer lint",
     "test": "polymer test",
+    "posttest": "npm run test:jest",
     "test:jest": "jest",
     "test:jest:watch": "jest --watch"
   },

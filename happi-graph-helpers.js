@@ -254,42 +254,18 @@ export const relativeTo = (nodeA, nodeB) => {
   }
 };
 
-export const getNodeAnchorPoint = (node, point, graphDirection) => {
+export const getNodeAnchorPoint = (node, point) => {
   let { width, height } = node;
 
   switch(point) {
     case 'TOP':
-      if(graphDirection === 'HORIZONTAL') {
         return { x: node.x + (width / 2), y: node.y };
-      }
-
-      if(graphDirection === 'VERTICAL') {
-        return { x: node.x + (width / 2), y: node.y };
-      }
     case 'BOTTOM':
-      if(graphDirection === 'HORIZONTAL') {
         return { x: node.x + (width / 2), y: node.y + height };
-      }
-
-      if(graphDirection === 'VERTICAL') {
-        return { x: node.x + (width / 2), y: node.y + height };
-      }
     case 'LEFT':
-      if(graphDirection === 'HORIZONTAL') {
         return { x: node.x, y: node.y + (height / 2)};
-      }
-
-      if(graphDirection === 'VERTICAL') {
-        return { x: node.x, y: node.y + (height / 2)};
-      }
     case 'RIGHT':
-      if(graphDirection === 'HORIZONTAL') {
         return { x: node.x + width, y: node.y + (height / 2)};
-      }
-
-      if(graphDirection === 'VERTICAL') {
-        return { x: node.x + width, y: node.y + (height / 2)};
-      }
     default:
       console.log('WRONG_ANCHOR_POINT_SELECTED');
       break;
@@ -299,8 +275,8 @@ export const getNodeAnchorPoint = (node, point, graphDirection) => {
 export const getLinkCoordinates = (nodeA, nodeB, graphDirection) => {
   let _relativeTo = relativeTo(nodeA, nodeB);
 
-  let from = getNodeAnchorPoint(nodeA, _relativeTo.a, graphDirection);
-  let to = getNodeAnchorPoint(nodeB, _relativeTo.b, graphDirection);
+  let from = getNodeAnchorPoint(nodeA, _relativeTo.a);
+  let to = getNodeAnchorPoint(nodeB, _relativeTo.b);
 
   return {
     from: { x: from.x, y: from.y },

@@ -109,11 +109,11 @@ test('getNodeAnchorPoint', () => {
     y: 0
   };
 
-  expect(getNodeAnchorPoint(node, 'TOP', 'HORIZONTAL')).toMatchObject({ x: 50, y: 0 });
-  expect(getNodeAnchorPoint(node, 'BOTTOM', 'HORIZONTAL')).toMatchObject({ x: 50, y: 100 });
-  expect(getNodeAnchorPoint(node, 'LEFT', 'HORIZONTAL')).toMatchObject({ x: 0, y: 50 });
-  expect(getNodeAnchorPoint(node, 'RIGHT', 'HORIZONTAL')).toMatchObject({ x: 100, y: 50 });
-  expect(getNodeAnchorPoint({ ...node, properties: { a: 1 } }, 'RIGHT', 'HORIZONTAL')).toMatchObject({ x: 100, y: 50 });
+  expect(getNodeAnchorPoint(node, 'TOP')).toMatchObject({ x: 50, y: 0 });
+  expect(getNodeAnchorPoint(node, 'BOTTOM')).toMatchObject({ x: 50, y: 100 });
+  expect(getNodeAnchorPoint(node, 'LEFT')).toMatchObject({ x: 0, y: 50 });
+  expect(getNodeAnchorPoint(node, 'RIGHT')).toMatchObject({ x: 100, y: 50 });
+  expect(getNodeAnchorPoint({ ...node, properties: { a: 1 } }, 'RIGHT')).toMatchObject({ x: 100, y: 50 });
 });
 
 test('getLinkCoordinates', () => {
