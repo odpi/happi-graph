@@ -9,7 +9,8 @@ import {
   addIcon,
   addProperties,
   getNodeHeight,
-  isSelected
+  isSelected,
+  getLinkCoordinates
 } from './happi-graph-helpers';
 
 import 'elkjs/lib/elk-api';
@@ -322,7 +323,6 @@ class HappiGraph extends PolymerElement {
 
     elk.layout(graph)
       .then((g) => {
-        console.log(g)
 
         this.nodes = [ ...g.children ];
         this.links = [ ...g.edges ];
@@ -407,15 +407,51 @@ class HappiGraph extends PolymerElement {
                   .filter(function(_d) {
                     return _d.from.id === d.id;
                   })
-                  .attr('x1', () => self.graphDirection === 'HORIZONTAL' ? d3.event.x + d.width + 3 : d3.event.x + (d.width/2))
-                  .attr('y1', () => self.graphDirection === 'HORIZONTAL' ? d3.event.y + (d.height/2) : d3.event.y - 3);
+                  .attr('x1', (_d) => {
+                    let { from, to } = getLinkCoordinates(_d.from, _d.to, self.graphDirection);
+
+                    return from.x;
+                  })
+                  .attr('y1', (_d) => {
+                    let { from, to } = getLinkCoordinates(_d.from, _d.to, self.graphDirection);
+
+                    return from.y;
+                  })
+                  .attr('x2', (_d) => {
+                    let { from, to } = getLinkCoordinates(_d.from, _d.to, self.graphDirection);
+
+                    return to.x;
+                  })
+                  .attr('y2', (_d) => {
+                    let { from, to } = getLinkCoordinates(_d.from, _d.to, self.graphDirection);
+
+                    return to.y;
+                  });
 
                 _links
                   .filter(function(_d) {
                     return _d.to.id === d.id;
                   })
-                  .attr('x2', () => self.graphDirection === 'HORIZONTAL' ? d3.event.x - 5 : d3.event.x + (d.width/2))
-                  .attr('y2', () => self.graphDirection === 'HORIZONTAL' ? d3.event.y + (d.height/2) : d3.event.y + (d.height) + 5);
+                  .attr('x1', (_d) => {
+                    let { from, to } = getLinkCoordinates(_d.from, _d.to, self.graphDirection);
+
+                    return from.x;
+                  })
+                  .attr('y1', (_d) => {
+                    let { from, to } = getLinkCoordinates(_d.from, _d.to, self.graphDirection);
+
+                    return from.y;
+                  })
+                  .attr('x2', (_d) => {
+                    let { from, to } = getLinkCoordinates(_d.from, _d.to, self.graphDirection);
+
+                    return to.x;
+                  })
+                  .attr('y2', (_d) => {
+                    let { from, to } = getLinkCoordinates(_d.from, _d.to, self.graphDirection);
+
+                    return to.y;
+                  });
             })
             .on('end', (d) => {
               // console.log('DRAG_END', d);
@@ -455,10 +491,26 @@ class HappiGraph extends PolymerElement {
       .attr('marker-end', (d) => (d.connectionTo) ? 'url(#arrow-end)' : null)
       .attr('from', function(d) { return d.from.id; })
       .attr('to', function(d) { return d.to.id; })
-      .attr('x1', (d) => self.graphDirection === 'HORIZONTAL' ? d.from.x + d.from.width + 3 : d.from.x + (d.from.width/2))
-      .attr('y1', (d) => self.graphDirection === 'HORIZONTAL' ? d.from.y + (d.from.height/2) : d.from.y - 3)
-      .attr('x2', (d) => self.graphDirection === 'HORIZONTAL' ? d.to.x - 5 : d.to.x + (d.to.width/2))
-      .attr('y2', (d) => self.graphDirection === 'HORIZONTAL' ? d.to.y + (d.to.height/2) : d.to.y + (d.to.height) + 5);
+      .attr('x1', (d) => {
+        let { from, to } = getLinkCoordinates(d.from, d.to, self.graphDirection);
+
+        return from.x;
+      })
+      .attr('y1', (d) => {
+        let { from, to } = getLinkCoordinates(d.from, d.to, self.graphDirection);
+
+        return from.y;
+      })
+      .attr('x2', (d) => {
+        let { from, to } = getLinkCoordinates(d.from, d.to, self.graphDirection);
+
+        return to.x;
+      })
+      .attr('y2', (d) => {
+        let { from, to } = getLinkCoordinates(d.from, d.to, self.graphDirection);
+
+        return to.y;
+      });
   }
 
   zooming() {

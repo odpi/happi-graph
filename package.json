@@ -7,7 +7,10 @@
     "start:dev": "polymer serve --proxy-target http://localhost:9000/api --proxy-path api",
     "build": "polymer build",
     "lint": "polymer lint",
-    "test": "polymer test"
+    "test": "polymer test",
+    "posttest": "npm run test:jest",
+    "test:jest": "jest",
+    "test:jest:watch": "jest --watch"
   },
   "dependencies": {
     "@capaj/pluralize": "git+https://github.com/capaj/pluralize.git",
@@ -22,11 +25,13 @@
     "vis-network": "9.0.4"
   },
   "devDependencies": {
+    "@babel/plugin-transform-modules-commonjs": "^7.14.5",
     "@polymer/iron-demo-helpers": "^3.1.0",
     "@polymer/test-fixture": "^4.0.2",
     "@webcomponents/webcomponentsjs": "^2.0.0",
     "chai": "^4.2.0",
     "egeria-js-commons": "git+https://github.com/odpi/egeria-js-commons#v0.2.1",
+    "jest": "^27.0.6",
     "mocha": "^6.1.4",
     "polymer-cli": "^1.9.11",
     "wct-mocha": "^1.0.1"
