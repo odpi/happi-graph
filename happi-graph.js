@@ -89,6 +89,10 @@ class HappiGraph extends PolymerElement {
       isLoading: {
         type: Boolean,
         value: false
+      },
+      nodeCountLimit: {
+        type: Number,
+        value: 0
       }
     };
   }
@@ -290,12 +294,12 @@ class HappiGraph extends PolymerElement {
       }
     });
 
-    console.log(this.nodes, this.links);
+    // console.log(this.nodes, this.links);
 
     this.initGraph();
     this.addNodes();
     this.addLinks();
-    this.centerGraph();
+    this.whereToCenter();
   }
 
   elkApproach() {
@@ -332,7 +336,7 @@ class HappiGraph extends PolymerElement {
         this.initGraph();
         this.addNodes();
         this.addLinks();
-        this.centerGraph();
+        this.whereToCenter();
       })
       // .catch(console.error)
   }
@@ -533,19 +537,22 @@ class HappiGraph extends PolymerElement {
     this.customZoom(-1);
   }
 
-  centerGraph() {
+  whereToCenter() {
+    let selectedNode = this.nodes.filter(n => n.selected === true).pop();
+    let nodeCount = this.nodes.length;
+    if(nodeCount < this.nodeCountLimit || this.nodeCountLimit == 0) {
+      this.centerGraph();
+    } else {
+      this.centerToNode(selectedNode);
+    }
+  }
+
+  centerToCoordinates(data, scaledBy) {
     let self = this;
+    let { x, y, width, height } = data;
 
     let svgWidth = parseInt(this.svg.style('width'));
     let svgHeight = parseInt(this.svg.style('height'));
-
-    let graphBBox = this.allGroup.node().getBBox();
-
-    let scaledBy = Math.min(
-      (svgWidth - 100) / graphBBox.width,
-      (svgHeight - 100) / graphBBox.height,
-      1
-    );
 
     let svgCenter = {
       x: svgWidth / 2,
@@ -557,11 +564,39 @@ class HappiGraph extends PolymerElement {
         self.zoom.transform,
         d3.zoomIdentity
           .translate(
-            svgCenter.x - ((graphBBox.x * scaledBy) + (graphBBox.width * scaledBy) / 2),
-            svgCenter.y - ((graphBBox.y * scaledBy) + (graphBBox.height * scaledBy) / 2)
+            svgCenter.x - ((x * scaledBy) + (width * scaledBy) / 2),
+            svgCenter.y - ((y * scaledBy) + (height * scaledBy) / 2)
           )
           .scale(scaledBy)
       )
+  }
+
+  centerToNode(node) {
+    let { x, y, width, height } = node;
+
+    this.centerToCoordinates({x: x, y: y, width: width, height: height}, 0.6);
+  }
+
+  centerGraph() {
+    let graphBBox = this.allGroup.node().getBBox();
+
+    let svgWidth = parseInt(this.svg.style('width'));
+    let svgHeight = parseInt(this.svg.style('height'));
+
+    let data = {
+      x: graphBBox.x,
+      y: graphBBox.y,
+      width: graphBBox.width,
+      height: graphBBox.height
+    };
+
+    let scaledBy = Math.min(
+      (svgWidth - 100) / graphBBox.width,
+      (svgHeight - 100) / graphBBox.height,
+      1
+    );
+
+    this.centerToCoordinates(data, scaledBy);
   }
 
   cachedGraph() {
