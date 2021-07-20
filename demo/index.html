@@ -53,11 +53,6 @@
     <button id="add-data">add-data</button>
   </div>
 
-
-  <div class="container bordered">
-    <happi-graph id="happi-graph-four"></happi-graph>
-  </div>
-
   <div class="container bordered">
     <happi-graph id="happi-graph"></happi-graph>
   </div>
@@ -68,6 +63,10 @@
 
   <div class="container bordered">
     <happi-graph id="happi-graph-three"></happi-graph>
+  </div>
+
+  <div class="container bordered">
+    <happi-graph id="happi-graph-four"></happi-graph>
   </div>
 
   <script type="module">
@@ -83,35 +82,7 @@
       ...itemGroupIconMap
     };
 
-    let dataFour = {
-      graphDirection: 'HORIZONTAL',
-      selectedNodeId: 1,
-      nodes: [
-        { id: 1, label: 'Node 1', group: 'GroupName', properties: { GroupName: 'IBS_UTBLIACML' } },
-        { id: 2, label: 'Node 2', group: 'GroupName', properties: {} }
-      ],
-      links: [
-        { from: 1, to: 2, connectionFrom: false, connectionTo: true, type: null },
-      ]
-    }
-
-    let happiGraphInstance4 = document.querySelector('#happi-graph-four');
-    happiGraphInstance4.iconsMap = iconsMap;
-    happiGraphInstance4.propertiesMap = propertiesMap;
-    happiGraphInstance4.linksTypeIconMap = linksTypeIconMap;
-    happiGraphInstance4.algorithm = 'ELK';
-    happiGraphInstance4.elkWorkerUrl = '/node_modules/elkjs/lib/elk-worker.js';
-
-    happiGraphInstance4.graphData = { ...dataFour };
-    happiGraphInstance4.init();
-
-    happiGraphInstance4.addEventListener('happi-graph-on-node-click', ({ detail }) => {
-      console.log(detail);
-    });
-
-
-
-
+    /* ===================================================================== */
 
     let data = {
       graphDirection: 'HORIZONTAL',
@@ -147,24 +118,25 @@
     };
 
     let happiGraphInstance = document.querySelector('#happi-graph');
-    happiGraphInstance.iconsMap = iconsMap;
-    happiGraphInstance.propertiesMap = propertiesMap;
-    happiGraphInstance.linksTypeIconMap = linksTypeIconMap;
-    happiGraphInstance.algorithm = 'ELK';
-    happiGraphInstance.elkWorkerUrl = '/node_modules/elkjs/lib/elk-worker.js';
+        happiGraphInstance.nodeCountLimit = 9;
+        happiGraphInstance.iconsMap = iconsMap;
+        happiGraphInstance.propertiesMap = propertiesMap;
+        happiGraphInstance.linksTypeIconMap = linksTypeIconMap;
+        happiGraphInstance.algorithm = 'ELK';
+        happiGraphInstance.elkWorkerUrl = '/node_modules/elkjs/lib/elk-worker.js';
 
-    happiGraphInstance.graphData = { ...data };
-    happiGraphInstance.init();
+        happiGraphInstance.graphData = { ...data };
+        happiGraphInstance.init();
 
-    happiGraphInstance.addEventListener('happi-graph-on-node-click', ({ detail }) => {
-      console.log(detail);
-    });
+        happiGraphInstance.addEventListener('happi-graph-on-node-click', ({ detail }) => {
+          console.log(detail);
+        });
 
-    happiGraphInstance.addEventListener('happi-graph-on-cached-graph', ({ id }) => {
-      happiGraphInstance.updateGraphData({ ...data });
-      happiGraphInstance2.updateGraphData({ ...data2 });
-      happiGraphInstance3.updateGraphData({ ...data3 });
-    });
+        happiGraphInstance.addEventListener('happi-graph-on-cached-graph', ({ id }) => {
+          happiGraphInstance.updateGraphData({ ...data });
+        });
+
+    /* ===================================================================== */
 
     let data2 = {
       graphDirection: 'VERTICAL',
@@ -177,24 +149,30 @@
         { id: 4, label: 'This is the value of Node 4', group: 'GroupName', properties: {} },
       ],
       links: [
-        { from: 0, to: 1, connectionFrom: false, connectionTo: true },
-        { from: 0, to: 2, connectionFrom: false, connectionTo: true },
-        { from: 0, to: 3, connectionFrom: false, connectionTo: true },
-        { from: 3, to: 4, connectionFrom: false, connectionTo: true }
+        { from: 0, to: 1, connectionFrom: false, connectionTo: true, type: null },
+        { from: 0, to: 2, connectionFrom: false, connectionTo: true, type: null },
+        { from: 0, to: 3, connectionFrom: false, connectionTo: true, type: null },
+        { from: 3, to: 4, connectionFrom: false, connectionTo: true, type: null }
       ]
     };
 
     let happiGraphInstance2 = document.querySelector('#happi-graph-two');
-    happiGraphInstance2.iconsMap = iconsMap;
-    happiGraphInstance2.propertiesMap = propertiesMap;
-    happiGraphInstance2.graphData = { ...data2 };
-    happiGraphInstance2.init();
+        happiGraphInstance2.nodeCountLimit = 10;
+        happiGraphInstance2.iconsMap = iconsMap;
+        happiGraphInstance2.propertiesMap = propertiesMap;
+        happiGraphInstance2.linksTypeIconMap = linksTypeIconMap;
+        happiGraphInstance2.graphData = { ...data2 };
+        happiGraphInstance2.init();
+
     happiGraphInstance2.addEventListener('happi-graph-on-node-click', ({ detail }) => {
       console.log(detail);
     });
     happiGraphInstance2.addEventListener('happi-graph-on-cached-graph', ({ id }) => {
       happiGraphInstance2.graphData = { ...data2 };
     });
+
+
+    /* ===================================================================== */
 
     let data3 = {
       graphDirection: 'VERTICAL',
@@ -204,10 +182,13 @@
     };
 
     let happiGraphInstance3 = document.querySelector('#happi-graph-three');
-    happiGraphInstance3.iconsMap = iconsMap;
-    happiGraphInstance3.propertiesMap = propertiesMap;
-    happiGraphInstance3.graphData = { ...data3 };
-    happiGraphInstance3.init();
+        happiGraphInstance3.nodeCountLimit = 5;
+        happiGraphInstance3.iconsMap = iconsMap;
+        happiGraphInstance3.propertiesMap = propertiesMap;
+        happiGraphInstance3.linksTypeIconMap = linksTypeIconMap;
+        happiGraphInstance3.graphData = { ...data3 };
+        happiGraphInstance3.init();
+
     happiGraphInstance3.addEventListener('happi-graph-on-node-click', ({ detail }) => {
       console.log(detail);
     });
@@ -215,36 +196,72 @@
       happiGraphInstance3.graphData = { ...data3 };
     });
 
+    /* ===================================================================== */
+
+    let data4 = {
+      graphDirection: 'HORIZONTAL',
+      selectedNodeId: 1,
+      nodes: [
+        { id: 1, label: 'Node 1', group: 'GroupName', properties: { GroupName: 'IBS_UTBLIACML' } },
+        { id: 2, label: 'Node 2', group: 'GroupName', properties: {} }
+      ],
+      links: [
+        { from: 1, to: 2, connectionFrom: false, connectionTo: true, type: null },
+      ]
+    }
+
+    let happiGraphInstance4 = document.querySelector('#happi-graph-four');
+        happiGraphInstance4.nodeCountLimit = 30;
+        happiGraphInstance4.iconsMap = iconsMap;
+        happiGraphInstance4.propertiesMap = propertiesMap;
+        happiGraphInstance4.linksTypeIconMap = linksTypeIconMap;
+        happiGraphInstance4.algorithm = 'ELK';
+        happiGraphInstance4.elkWorkerUrl = '/node_modules/elkjs/lib/elk-worker.js';
+
+        happiGraphInstance4.graphData = { ...data4 };
+        happiGraphInstance4.init();
+
+        happiGraphInstance4.addEventListener('happi-graph-on-node-click', ({ detail }) => {
+          console.log(detail);
+        });
+
+    /* ===================================================================== */
+
     /* Buttons */
 
-    document.querySelector('#zoom-in').addEventListener('click', () => {
+    document.querySelector('button#zoom-in').addEventListener('click', () => {
       happiGraphInstance.customZoomIn();
       happiGraphInstance2.customZoomIn();
       happiGraphInstance3.customZoomIn();
+      happiGraphInstance4.customZoomIn();
     });
 
-    document.querySelector('#zoom-out').addEventListener('click', () => {
+    document.querySelector('button#zoom-out').addEventListener('click', () => {
       happiGraphInstance.customZoomOut();
       happiGraphInstance2.customZoomOut();
       happiGraphInstance3.customZoomOut();
+      happiGraphInstance4.customZoomOut();
     });
 
-    document.querySelector('#center-graph').addEventListener('click', () => {
+    document.querySelector('button#center-graph').addEventListener('click', () => {
       happiGraphInstance.centerGraph();
       happiGraphInstance2.centerGraph();
       happiGraphInstance3.centerGraph();
+      happiGraphInstance4.centerGraph();
     });
 
-    document.querySelector('#remove-data').addEventListener('click', () => {
+    document.querySelector('button#remove-data').addEventListener('click', () => {
       happiGraphInstance.removeData();
       happiGraphInstance2.removeData();
       happiGraphInstance3.removeData();
+      happiGraphInstance4.removeData();
     });
 
-    document.querySelector('#add-data').addEventListener('click', () => {
+    document.querySelector('button#add-data').addEventListener('click', () => {
       happiGraphInstance.updateGraphData({ ...data });
       happiGraphInstance2.updateGraphData({ ...data2 });
       happiGraphInstance3.updateGraphData({ ...data3 });
+      happiGraphInstance4.updateGraphData({ ...data4 });
     });
   </script>
 </body>
