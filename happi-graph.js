@@ -93,6 +93,14 @@ class HappiGraph extends PolymerElement {
       nodeCountLimit: {
         type: Number,
         value: 0
+      },
+      nodeDistanceX: {
+        type: Number,
+        value: 350
+      },
+      nodeDistanceY: {
+        type: Number,
+        value: 350
       }
     };
   }
@@ -256,8 +264,8 @@ class HappiGraph extends PolymerElement {
         improvedLayout: false,
         hierarchical: {
           enabled:true,
-          levelSeparation: 450,
-          nodeSpacing: 350,
+          levelSeparation: this.nodeDistanceY,
+          nodeSpacing: this.nodeDistanceX,
           treeSpacing: 200,
           direction: this.graphDirection === 'HORIZONTAL' ? 'LR' : 'DU', // UD, DU, LR, RL
           sortMethod: 'directed',  // hubsize, directed
@@ -311,8 +319,8 @@ class HappiGraph extends PolymerElement {
       id: "root",
       layoutOptions: {
         "elk.algorithm": "layered",
-        "elk.spacing.nodeNode": 200,
-        "elk.layered.spacing.baseValue": 150,
+        "elk.spacing.nodeNode": this.nodeDistanceY,
+        "elk.layered.spacing.baseValue": this.nodeDistanceX,
         "elk.direction": this.graphDirection === 'HORIZONTAL' ? 'RIGHT' : 'UP'
       },
       children: [
