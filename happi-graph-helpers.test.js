@@ -15,7 +15,7 @@ test('nodeB should be above nodeA', () => {
   let nodeA = { x: 0, y: 0, width: 100, height: 100 };
   let nodeB = { x: 0, y: -101, width: 100, height: 100 };
 
-  expect(relativeTo(nodeA, nodeB)).toMatchObject({"a": "TOP", "b": "BOTTOM"});
+  expect(relativeTo(nodeA, nodeB, 'HORIZONTAL')).toMatchObject({"a": "TOP", "b": "BOTTOM"});
 });
 
 /*
@@ -27,7 +27,7 @@ test('nodeB should be above nodeA and on the right', () => {
   let nodeA = { x: 0, y: 0, width: 100, height: 100 };
   let nodeB = { x: 101, y: -101, width: 100, height: 100 };
 
-  expect(relativeTo(nodeA, nodeB)).toMatchObject({"a": "RIGHT", "b": "LEFT"});
+  expect(relativeTo(nodeA, nodeB, 'HORIZONTAL')).toMatchObject({"a": "RIGHT", "b": "LEFT"});
 });
 
 /*
@@ -37,7 +37,7 @@ test('nodeB should be on the right of nodeA', () => {
   let nodeA = { x: 0, y: 0, width: 100, height: 100 };
   let nodeB = { x: 101, y: 0, width: 100, height: 100 };
 
-  expect(relativeTo(nodeA, nodeB)).toMatchObject({"a": "RIGHT", "b": "LEFT"});
+  expect(relativeTo(nodeA, nodeB, 'HORIZONTAL')).toMatchObject({"a": "RIGHT", "b": "LEFT"});
 });
 
 /*
@@ -49,7 +49,7 @@ test('nodeB should be below nodeA on the right', () => {
   let nodeA = { x: 0, y: 0, width: 100, height: 100 };
   let nodeB = { x: 100, y: -101, width: 100, height: 100 };
 
-  expect(relativeTo(nodeA, nodeB)).toMatchObject({"a": "RIGHT", "b": "LEFT"});
+  expect(relativeTo(nodeA, nodeB, 'HORIZONTAL')).toMatchObject({"a": "RIGHT", "b": "LEFT"});
 });
 
 /*
@@ -63,7 +63,7 @@ test('nodeB should be below nodeA', () => {
   let nodeA = { x: 0, y: 0, width: 100, height: 100 };
   let nodeB = { x: 0, y: 101, width: 100, height: 100 };
 
-  expect(relativeTo(nodeA, nodeB)).toMatchObject({"a": "BOTTOM", "b": "TOP"});
+  expect(relativeTo(nodeA, nodeB, 'HORIZONTAL')).toMatchObject({"a": "BOTTOM", "b": "TOP"});
 });
 
 /*
@@ -75,7 +75,7 @@ test('nodeB should be below nodeA on the left', () => {
   let nodeA = { x: 0, y: 0, width: 100, height: 100 };
   let nodeB = { x: -101, y: 101, width: 100, height: 100 };
 
-  expect(relativeTo(nodeA, nodeB)).toMatchObject({"a": "LEFT", "b": "RIGHT"});
+  expect(relativeTo(nodeA, nodeB, 'HORIZONTAL')).toMatchObject({"a": "LEFT", "b": "RIGHT"});
 });
 
 /*
@@ -85,7 +85,7 @@ test('nodeB should be on left of nodeA', () => {
   let nodeA = { x: 0, y: 0, width: 100, height: 100 };
   let nodeB = { x: -101, y: 0, width: 100, height: 100 };
 
-  expect(relativeTo(nodeA, nodeB)).toMatchObject({"a": "LEFT", "b": "RIGHT"});
+  expect(relativeTo(nodeA, nodeB, 'HORIZONTAL')).toMatchObject({"a": "LEFT", "b": "RIGHT"});
 });
 
 /*
@@ -97,7 +97,46 @@ test('nodeB should be above nodeA on the left', () => {
   let nodeA = { x: 0, y: 0, width: 100, height: 100 };
   let nodeB = { x: -101, y: -101, width: 100, height: 100 };
 
-  expect(relativeTo(nodeA, nodeB)).toMatchObject({"a": "LEFT", "b": "RIGHT"});
+  expect(relativeTo(nodeA, nodeB, 'HORIZONTAL')).toMatchObject({"a": "LEFT", "b": "RIGHT"});
+});
+
+
+/*
+  nodeB(-1, 1) .
+                 .
+                   . nodeA(0, 0)
+*/
+test('nodeB should be above nodeA on the left in vertical graph', () => {
+  let nodeA = { x: 0, y: 0, width: 100, height: 100 };
+  let nodeB = { x: -101, y: -101, width: 100, height: 100 };
+
+  expect(relativeTo(nodeA, nodeB, 'VERTICAL')).toMatchObject({"a": "TOP", "b": "BOTTOM"});
+});
+
+/*
+                    . nodeA(0, 0)
+                  .
+  nodeB(-1, -1) .
+*/
+test('nodeB should be below nodeA on the left in vertical graph', () => {
+  let nodeA = { x: 0, y: 0, width: 100, height: 100 };
+  let nodeB = { x: -101, y: -101, width: 100, height: 100 };
+
+  expect(relativeTo(nodeA, nodeB, 'VERTICAL')).toMatchObject({"a": "TOP", "b": "BOTTOM"});
+});
+
+/*
+  nodeA(0, 1)
+    .
+    .
+    .
+  nodeB(0, 0)
+*/
+test('nodeB should be above nodeA', () => {
+  let nodeA = { x: 0, y: 101, width: 100, height: 100 };
+  let nodeB = { x: 0, y: 0, width: 100, height: 100 };
+
+  expect(relativeTo(nodeA, nodeB, 'VERTICAL')).toMatchObject({"a": "TOP", "b": "BOTTOM"});
 });
 
 test('getNodeAnchorPoint', () => {
