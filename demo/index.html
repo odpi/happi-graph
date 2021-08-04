@@ -69,6 +69,10 @@
     <happi-graph id="happi-graph-four"></happi-graph>
   </div>
 
+  <div class="container bordered">
+    <happi-graph id="happi-graph-five"></happi-graph>
+  </div>
+
   <script type="module">
     import { iconsMap, linksTypeIconMap, itemGroupIconMap } from 'egeria-js-commons';
 
@@ -227,6 +231,35 @@
 
     /* ===================================================================== */
 
+    let data5 = {
+      graphDirection: 'VERTICAL',
+      selectedNodeId: 1,
+      nodes: [
+        { id: 1, label: 'Node 1', group: 'GroupName', properties: { GroupName: 'IBS_UTBLIACML' } },
+        { id: 2, label: 'Node 2', group: 'GroupName', properties: {} }
+      ],
+      links: [
+        { from: 1, to: 2, connectionFrom: false, connectionTo: true, type: null },
+      ]
+    }
+
+    let happiGraphInstance5 = document.querySelector('#happi-graph-five');
+        happiGraphInstance5.nodeCountLimit = 30;
+        happiGraphInstance5.iconsMap = iconsMap;
+        happiGraphInstance5.propertiesMap = propertiesMap;
+        happiGraphInstance5.linksTypeIconMap = linksTypeIconMap;
+        happiGraphInstance5.algorithm = 'ELK';
+        happiGraphInstance5.elkWorkerUrl = '/node_modules/elkjs/lib/elk-worker.js';
+
+        happiGraphInstance5.graphData = { ...data5 };
+        happiGraphInstance5.init();
+
+        happiGraphInstance5.addEventListener('happi-graph-on-node-click', ({ detail }) => {
+          console.log(detail);
+        });
+
+    /* ===================================================================== */
+
     /* Buttons */
 
     document.querySelector('button#zoom-in').addEventListener('click', () => {
@@ -234,6 +267,7 @@
       happiGraphInstance2.customZoomIn();
       happiGraphInstance3.customZoomIn();
       happiGraphInstance4.customZoomIn();
+      happiGraphInstance5.customZoomIn();
     });
 
     document.querySelector('button#zoom-out').addEventListener('click', () => {
@@ -241,6 +275,7 @@
       happiGraphInstance2.customZoomOut();
       happiGraphInstance3.customZoomOut();
       happiGraphInstance4.customZoomOut();
+      happiGraphInstance5.customZoomOut();
     });
 
     document.querySelector('button#center-graph').addEventListener('click', () => {
@@ -248,6 +283,7 @@
       happiGraphInstance2.centerGraph();
       happiGraphInstance3.centerGraph();
       happiGraphInstance4.centerGraph();
+      happiGraphInstance5.centerGraph();
     });
 
     document.querySelector('button#remove-data').addEventListener('click', () => {
@@ -255,6 +291,7 @@
       happiGraphInstance2.removeData();
       happiGraphInstance3.removeData();
       happiGraphInstance4.removeData();
+      happiGraphInstance5.removeData();
     });
 
     document.querySelector('button#add-data').addEventListener('click', () => {
@@ -262,6 +299,7 @@
       happiGraphInstance2.updateGraphData({ ...data2 });
       happiGraphInstance3.updateGraphData({ ...data3 });
       happiGraphInstance4.updateGraphData({ ...data4 });
+      happiGraphInstance5.updateGraphData({ ...data5 });
     });
   </script>
 </body>
