@@ -202,7 +202,7 @@ export const getNodeHeight = (length) => {
   return defaultHeight + computedHeight;
 };
 
-export const relativeTo = (nodeA, nodeB) => {
+export const relativeTo = (nodeA, nodeB, graphDirection) => {
   let a = {
     x1: nodeA.x,
     y1: nodeA.y,
@@ -222,7 +222,7 @@ export const relativeTo = (nodeA, nodeB) => {
   }
 
   if((a.x1 < b.x2) && !(a.x2 > b.x1) && !(a.y1 < b.y2) && (a.y2 > b.y1)) {
-    return { a: 'RIGHT', b: 'LEFT' };
+    return graphDirection === 'VERTICAL' ? { a: 'TOP', b: 'BOTTOM' } : { a: 'RIGHT', b: 'LEFT' };
   }
 
   if((a.x1 < b.x2) && !(a.x2 > b.x1) && (a.y1 < b.y2) && !(a.y2 > b.y1)) {
@@ -242,7 +242,7 @@ export const relativeTo = (nodeA, nodeB) => {
   }
 
   if(!(a.x1 < b.x2) && (a.x2 > b.x1) && !(a.y1 < b.y2) && (a.y2 > b.y1)) {
-    return { a: 'LEFT', b: 'RIGHT' };
+    return graphDirection === 'VERTICAL' ? { a: 'TOP', b: 'BOTTOM' } : { a: 'LEFT', b: 'RIGHT' };
   }
 
   if((a.x1 < b.x2) && (a.x2 > b.x1) && !(a.y1 < b.y2) && (a.y2 > b.y1)) {
@@ -273,7 +273,7 @@ export const getNodeAnchorPoint = (node, point) => {
 };
 
 export const getLinkCoordinates = (nodeA, nodeB, graphDirection) => {
-  let _relativeTo = relativeTo(nodeA, nodeB);
+  let _relativeTo = relativeTo(nodeA, nodeB, graphDirection);
 
   let from = getNodeAnchorPoint(nodeA, _relativeTo.a);
   let to = getNodeAnchorPoint(nodeB, _relativeTo.b);
