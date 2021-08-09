@@ -400,10 +400,13 @@ class HappiGraph extends PolymerElement {
             })
             .on('drag', function(d) {
               d.x = d3.event.x;
-              d.y = d3.event.y;
+
+              if(self.graphDirection !== 'VERTICAL') {
+                d.y = d3.event.y;
+              }
 
               d3.select(this)
-                .attr('transform', `translate(${d3.event.x}, ${d3.event.y})`);
+                .attr('transform', `translate(${d3.event.x}, ${d.y})`);
 
                 let _links =
                   d3.select(
