@@ -22,6 +22,7 @@ class HappiGraph extends PolymerElement {
 
     this.zooming = this.zooming.bind(this);
     this.onNodeClick = this.onNodeClick.bind(this);
+    this.onLinkClick = this.onLinkClick.bind(this);
   }
 
   static get properties() {
@@ -160,7 +161,7 @@ class HappiGraph extends PolymerElement {
       this.links = [
         ...newGraphData.links.map(e => {
           return {
-            id: `${e.from}-${e.to}`,
+            id: e.id,
             label: e.label,
 
             from: this.nodes.filter(n => n.id === e.from).pop(),
@@ -504,8 +505,10 @@ class HappiGraph extends PolymerElement {
       })
       .attr('marker-start', (d) => (d.connectionFrom) ? 'url(#arrow-start)' : null)
       .attr('marker-end', (d) => (d.connectionTo) ? 'url(#arrow-end)' : null)
+      .attr('id', function(d) { return d.id; })
       .attr('from', function(d) { return d.from.id; })
       .attr('to', function(d) { return d.to.id; })
+      .on('click', this.onLinkClick)
       .attr('x1', (d) => {
         let { from, to } = getLinkCoordinates(d.from, d.to, self.graphDirection);
 
@@ -631,6 +634,18 @@ class HappiGraph extends PolymerElement {
           nodeId: node.id
         }
       })
+    );
+  }
+
+  onLinkClick(link) {
+    let element = this.shadowRoot.querySelector('#svg .all-group .links-group [id="'+ link.id +'"]')
+    this.dispatchEvent(
+        new CustomEvent('happi-graph-on-link-click', {
+          bubbles: true,
+          detail: {
+            linkElement: element
+          }
+        })
     );
   }
 
@@ -776,6 +791,16 @@ class HappiGraph extends PolymerElement {
                       orient="auto"
                       markerUnits="strokeWidth">
                 <path d="M0,0 L0,6 L9,3 z" fill="#000" />
+              </marker>
+
+              <marker id="arrow-end-selected"
+                      markerWidth="10"
+                      markerHeight="10"
+                      refx="7"
+                      refy="3"
+                      orient="auto"
+                      markerUnits="strokeWidth">
+                <path d="M0,0 L0,6 L9,3 z" fill="var(--happi-graph-primary-color)" />
               </marker>
             </defs>
           </svg>
