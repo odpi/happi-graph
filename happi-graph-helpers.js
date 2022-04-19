@@ -272,11 +272,54 @@ export const getNodeAnchorPoint = (node, point) => {
   }
 };
 
+export const adjustDestinationNode = (from, to, toPoint) => {
+  let offset = 5;
+
+  // upwards right
+  if(from.x < to.x && from.y > to.y) {
+    if (toPoint == 'BOTTOM' ) {
+      to.x = to.x - offset;
+    }else if (toPoint == 'LEFT'){
+      to.y = to.y + offset;
+    }
+  }
+
+  // upwards left
+  if(from.x > to.x && from.y > to.y){
+    if(toPoint == 'BOTTOM'){
+      to.x = to.x + offset;
+    }else if (toPoint == 'RIGHT'){
+      to.y = to.y + offset;
+    }
+  }
+
+  // downwards right
+  if(from.x < to.x && from.y < to.y){
+    if(toPoint == 'TOP'){
+      to.x = to.x - offset;
+    }else if (toPoint == 'LEFT'){
+      to.y = to.y - offset;
+    }
+  }
+
+  // downwards left
+  if(from.x > to.x && from.y < to.y){
+    if(toPoint == 'TOP'){
+      to.x = to.x + offset;
+    }else if (toPoint == 'LEFT'){
+      to.y = to.y - offset;
+    }
+  }
+
+  return to;
+};
+
 export const getLinkCoordinates = (nodeA, nodeB, graphDirection) => {
   let _relativeTo = relativeTo(nodeA, nodeB, graphDirection);
 
   let from = getNodeAnchorPoint(nodeA, _relativeTo.a);
   let to = getNodeAnchorPoint(nodeB, _relativeTo.b);
+  to = adjustDestinationNode(from, to, _relativeTo.b);
 
   return {
     from: { x: from.x, y: from.y },
