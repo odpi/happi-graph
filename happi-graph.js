@@ -639,6 +639,8 @@ class HappiGraph extends PolymerElement {
 
   onLinkClick(link) {
     let element = this.shadowRoot.querySelector('#svg .all-group .links-group [id="'+ link.id +'"]')
+    this.doLinkSelection(element);
+
     this.dispatchEvent(
         new CustomEvent('happi-graph-on-link-click', {
           bubbles: true,
@@ -647,6 +649,52 @@ class HappiGraph extends PolymerElement {
           }
         })
     );
+  }
+
+  doLinkSelection( linkElement ) {
+
+    if (this.sameLink(linkElement, this.selectedLink)) {
+      this.invertLinkSelection(linkElement)
+    } else {
+      this.selectLink(linkElement)
+
+      if(this.selectedLink){
+        this.deselectLink(this.selectedLink)
+      }
+    }
+    this.selectedLink = linkElement
+  }
+
+  sameLink(link, otherLink) {
+    return link === otherLink
+  }
+
+  invertLinkSelection(linkElement){
+    if(this.isLinkSelected(linkElement)){
+      this.deselectLink(linkElement)
+    }else{
+      this.selectLink(linkElement)
+    }
+  }
+
+  isLinkSelected(linkElement){
+    let stroke = linkElement.style.getPropertyValue("stroke");
+    let stroke_width = linkElement.style.getPropertyValue("stroke-width")
+    let marker_end = linkElement.getAttribute("marker-end")
+
+    return stroke === "var(--happi-graph-primary-color)" && stroke_width === "4" && marker_end === "url(#arrow-end-selected)";
+  }
+
+  deselectLink(linkElement){
+    linkElement.style.setProperty("stroke", "black")
+    linkElement.style.setProperty("stroke-width", "2")
+    linkElement.setAttribute("marker-end", "url(#arrow-end)")
+  }
+
+  selectLink(linkElement){
+    linkElement.style.setProperty("stroke", "var(--happi-graph-primary-color)")
+    linkElement.style.setProperty("stroke-width", "4")
+    linkElement.setAttribute("marker-end", "url(#arrow-end-selected)")
   }
 
   hasSize(a) {
