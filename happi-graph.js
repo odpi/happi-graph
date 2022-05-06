@@ -102,6 +102,10 @@ class HappiGraph extends PolymerElement {
       nodeDistanceY: {
         type: Number,
         value: 350
+      },
+      mousePosition: {
+        type: Object,
+        value: null
       }
     };
   }
@@ -360,6 +364,9 @@ class HappiGraph extends PolymerElement {
 
   initGraph() {
     this.svg = d3.select(this.$.svg);
+    this.addEventListener('mousemove', function (event) {
+      this.mousePosition = {x: event.x, y: event.y};
+    })
 
     this.allGroup =
       this.svg
@@ -509,6 +516,47 @@ class HappiGraph extends PolymerElement {
       .attr('from', function(d) { return d.from.id; })
       .attr('to', function(d) { return d.to.id; })
       .on('click', this.onLinkClick)
+      .on('mouseover', function(d){
+        let position = this.ownerSVGElement.createSVGPoint();
+        position.x = self.mousePosition.x;
+        position.y = self.mousePosition.y;
+        position = position.matrixTransform(this.parentNode.getScreenCTM().inverse());
+
+        let linkLabel = d.label;
+        let sourceLabel = self.nodes.filter(n => n.id === d.from.id ).pop().value;
+        let targetLabel = self.nodes.filter(n => n.id === d.to.id ).pop().value;
+
+        let textBackground =
+            d3.select(this.parentNode)
+                .append('rect')
+                .classed('link-popup-box', true)
+                .attr('transform', `translate(20, -10)`)
+                .style("fill", "#ffffff")
+                .style("stroke", "#cccccc")
+                .attr('rx', 10)
+                .attr('ry', 10);
+
+        let text =
+            d3.select(this.parentNode)
+                .append('text')
+                .classed('link-popup-text', true)
+                .attr('transform', `translate(30, 0)`)
+                .attr('x', position.x + 10)
+                .attr('y', position.y + 10)
+                .text(() => sourceLabel + " :: "+ linkLabel + " :: " + targetLabel );
+
+        let bBox = text.node().getBBox();
+
+        textBackground
+            .attr('x', bBox.x)
+            .attr('y', bBox.y)
+            .attr('height', bBox.height + 20)
+            .attr('width', bBox.width + 20);
+      })
+      .on('mouseout', function(d){
+        d3.select(this.ownerSVGElement.getElementsByClassName('link-popup-box')[0]).remove();
+        d3.select(this.ownerSVGElement.getElementsByClassName('link-popup-text')[0]).remove();
+      })
       .attr('x1', (d) => {
         let { from, to } = getLinkCoordinates(d.from, d.to, self.graphDirection);
 

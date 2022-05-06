@@ -277,36 +277,36 @@ export const adjustDestinationNode = (from, to, toPoint) => {
 
   // upwards right
   if(from.x < to.x && from.y > to.y) {
-    if (toPoint == 'BOTTOM' ) {
+    if (toPoint === 'BOTTOM' ) {
       to.x = to.x - offset;
-    }else if (toPoint == 'LEFT'){
+    }else if (toPoint === 'LEFT'){
       to.y = to.y + offset;
     }
   }
 
   // upwards left
   if(from.x > to.x && from.y > to.y){
-    if(toPoint == 'BOTTOM'){
+    if(toPoint === 'BOTTOM'){
       to.x = to.x + offset;
-    }else if (toPoint == 'RIGHT'){
+    }else if (toPoint === 'RIGHT'){
       to.y = to.y + offset;
     }
   }
 
   // downwards right
   if(from.x < to.x && from.y < to.y){
-    if(toPoint == 'TOP'){
+    if(toPoint === 'TOP'){
       to.x = to.x - offset;
-    }else if (toPoint == 'LEFT'){
+    }else if (toPoint === 'LEFT'){
       to.y = to.y - offset;
     }
   }
 
   // downwards left
   if(from.x > to.x && from.y < to.y){
-    if(toPoint == 'TOP'){
+    if(toPoint === 'TOP'){
       to.x = to.x + offset;
-    }else if (toPoint == 'LEFT'){
+    }else if (toPoint === 'LEFT'){
       to.y = to.y - offset;
     }
   }
