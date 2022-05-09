@@ -106,6 +106,10 @@ class HappiGraph extends PolymerElement {
       mousePosition: {
         type: Object,
         value: null
+      },
+      mousePositionEventListener: {
+        type: Object,
+        value: null
       }
     };
   }
@@ -362,11 +366,21 @@ class HappiGraph extends PolymerElement {
     this.allGroup ? this.allGroup.remove() : (this.debug ? console.log('ALL_GROUP_EMPTY') : 0);
   }
 
+  createMousePositionEventListener(){
+    this.mousePositionEventListener = function (event) {
+      this.mousePosition = {x: event.x, y: event.y};
+    };
+  }
+
+  disconnectedCallback() {
+    this.removeEventListener(this, this.mousePositionEventListener);
+  }
+
   initGraph() {
     this.svg = d3.select(this.$.svg);
-    this.addEventListener('mousemove', function (event) {
-      this.mousePosition = {x: event.x, y: event.y};
-    })
+
+    this.createMousePositionEventListener();
+    this.addEventListener('mousemove', this.mousePositionEventListener);
 
     this.allGroup =
       this.svg
