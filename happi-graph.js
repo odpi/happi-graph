@@ -373,7 +373,7 @@ class HappiGraph extends PolymerElement {
   }
 
   disconnectedCallback() {
-    this.removeEventListener(this, this.mousePositionEventListener);
+    this.removeEventListener('mousemove', this.mousePositionEventListener);
   }
 
   initGraph() {
