@@ -102,6 +102,14 @@ class HappiGraph extends PolymerElement {
       nodeDistanceY: {
         type: Number,
         value: 350
+      },
+      mousePosition: {
+        type: Object,
+        value: null
+      },
+      mousePositionEventListener: {
+        type: Object,
+        value: null
       }
     };
   }
@@ -358,8 +366,21 @@ class HappiGraph extends PolymerElement {
     this.allGroup ? this.allGroup.remove() : (this.debug ? console.log('ALL_GROUP_EMPTY') : 0);
   }
 
+  createMousePositionEventListener(){
+    this.mousePositionEventListener = function (event) {
+      this.mousePosition = {x: event.x, y: event.y};
+    };
+  }
+
+  disconnectedCallback() {
+    this.removeEventListener('mousemove', this.mousePositionEventListener);
+  }
+
   initGraph() {
     this.svg = d3.select(this.$.svg);
+
+    this.createMousePositionEventListener();
+    this.addEventListener('mousemove', this.mousePositionEventListener);
 
     this.allGroup =
       this.svg
@@ -509,6 +530,47 @@ class HappiGraph extends PolymerElement {
       .attr('from', function(d) { return d.from.id; })
       .attr('to', function(d) { return d.to.id; })
       .on('click', this.onLinkClick)
+      .on('mouseover', function(d){
+        let position = this.ownerSVGElement.createSVGPoint();
+        position.x = self.mousePosition.x;
+        position.y = self.mousePosition.y;
+        position = position.matrixTransform(this.parentNode.getScreenCTM().inverse());
+
+        let linkLabel = d.label;
+        let sourceLabel = self.nodes.filter(n => n.id === d.from.id ).pop().value;
+        let targetLabel = self.nodes.filter(n => n.id === d.to.id ).pop().value;
+
+        let textBackground =
+            d3.select(this.parentNode)
+                .append('rect')
+                .classed('link-popup-box', true)
+                .attr('transform', `translate(20, -10)`)
+                .style("fill", "#ffffff")
+                .style("stroke", "#cccccc")
+                .attr('rx', 10)
+                .attr('ry', 10);
+
+        let text =
+            d3.select(this.parentNode)
+                .append('text')
+                .classed('link-popup-text', true)
+                .attr('transform', `translate(30, 0)`)
+                .attr('x', position.x + 10)
+                .attr('y', position.y + 10)
+                .text(() => sourceLabel + " :: "+ linkLabel + " :: " + targetLabel );
+
+        let bBox = text.node().getBBox();
+
+        textBackground
+            .attr('x', bBox.x)
+            .attr('y', bBox.y)
+            .attr('height', bBox.height + 20)
+            .attr('width', bBox.width + 20);
+      })
+      .on('mouseout', function(d){
+        d3.select(this.ownerSVGElement.getElementsByClassName('link-popup-box')[0]).remove();
+        d3.select(this.ownerSVGElement.getElementsByClassName('link-popup-text')[0]).remove();
+      })
       .attr('x1', (d) => {
         let { from, to } = getLinkCoordinates(d.from, d.to, self.graphDirection);
 
@@ -639,6 +701,8 @@ class HappiGraph extends PolymerElement {
 
   onLinkClick(link) {
     let element = this.shadowRoot.querySelector('#svg .all-group .links-group [id="'+ link.id +'"]')
+    this.doLinkSelection(element);
+
     this.dispatchEvent(
         new CustomEvent('happi-graph-on-link-click', {
           bubbles: true,
@@ -647,6 +711,52 @@ class HappiGraph extends PolymerElement {
           }
         })
     );
+  }
+
+  doLinkSelection( linkElement ) {
+
+    if (this.sameLink(linkElement, this.selectedLink)) {
+      this.invertLinkSelection(linkElement)
+    } else {
+      this.selectLink(linkElement)
+
+      if(this.selectedLink){
+        this.deselectLink(this.selectedLink)
+      }
+    }
+    this.selectedLink = linkElement
+  }
+
+  sameLink(link, otherLink) {
+    return link === otherLink
+  }
+
+  invertLinkSelection(linkElement){
+    if(this.isLinkSelected(linkElement)){
+      this.deselectLink(linkElement)
+    }else{
+      this.selectLink(linkElement)
+    }
+  }
+
+  isLinkSelected(linkElement){
+    let stroke = linkElement.style.getPropertyValue("stroke");
+    let stroke_width = linkElement.style.getPropertyValue("stroke-width")
+    let marker_end = linkElement.getAttribute("marker-end")
+
+    return stroke === "var(--happi-graph-primary-color)" && stroke_width === "4" && marker_end === "url(#arrow-end-selected)";
+  }
+
+  deselectLink(linkElement){
+    linkElement.style.setProperty("stroke", "black")
+    linkElement.style.setProperty("stroke-width", "2")
+    linkElement.setAttribute("marker-end", "url(#arrow-end)")
+  }
+
+  selectLink(linkElement){
+    linkElement.style.setProperty("stroke", "var(--happi-graph-primary-color)")
+    linkElement.style.setProperty("stroke-width", "4")
+    linkElement.setAttribute("marker-end", "url(#arrow-end-selected)")
   }
 
   hasSize(a) {
