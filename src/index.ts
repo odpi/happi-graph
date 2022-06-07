@@ -1,1 +1,11 @@
-export * from './components';
+import {
+  Button,
+  HappiGraph,
+  HappiGraphActions
+} from "./components";
+
+export {
+  Button,
+  HappiGraph,
+  HappiGraphActions
+}
