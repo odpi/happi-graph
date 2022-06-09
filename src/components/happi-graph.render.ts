@@ -122,6 +122,8 @@ const isSelected = (nodeGroup: any) => {
     .attr('d', (d: any) => {
       if (d.selected) {
         return 'M7 2h10v2l-2 1v5l3 3v3h-5v4l-1 3l-1-3v-4H6v-3l3-3V5L7 4z';
+      } else {
+        return '';
       }
     })
     .attr('transform', (d: any) => {
@@ -211,7 +213,7 @@ const addNodes = (nodes: any, nodesGroup: any, graphDirection: string) => {
       .call(
         d3.drag()
           .on('start', (d: any) => {
-            // console.log('DRAG_START', d);
+            console.log('DRAG_START', d);
           })
           .on('drag', function(event: any, d: any) {
             d.x = event.x;
@@ -233,22 +235,22 @@ const addNodes = (nodes: any, nodesGroup: any, graphDirection: string) => {
                 return _d.from.id === d.id;
               })
               .attr('x1', (_d: any) => {
-                let { from, to } = getLinkCoordinates(_d.from, _d.to, graphDirection);
+                let { from/*, to*/ } = getLinkCoordinates(_d.from, _d.to, graphDirection);
 
                 return from.x;
               })
               .attr('y1', (_d: any) => {
-                let { from, to } = getLinkCoordinates(_d.from, _d.to, graphDirection);
+                let { from/*, to*/ } = getLinkCoordinates(_d.from, _d.to, graphDirection);
 
                 return from.y;
               })
               .attr('x2', (_d: any) => {
-                let { from, to } = getLinkCoordinates(_d.from, _d.to, graphDirection);
+                let { /*from,*/ to } = getLinkCoordinates(_d.from, _d.to, graphDirection);
 
                 return to.x;
               })
               .attr('y2', (_d: any) => {
-                let { from, to } = getLinkCoordinates(_d.from, _d.to, graphDirection);
+                let { /*from,*/ to } = getLinkCoordinates(_d.from, _d.to, graphDirection);
 
                 return to.y;
               });
@@ -258,28 +260,28 @@ const addNodes = (nodes: any, nodesGroup: any, graphDirection: string) => {
                 return _d.to.id === d.id;
               })
               .attr('x1', (_d: any) => {
-                let { from, to } = getLinkCoordinates(_d.from, _d.to, graphDirection);
+                let { from/*, to*/ } = getLinkCoordinates(_d.from, _d.to, graphDirection);
 
                 return from.x;
               })
               .attr('y1', (_d: any) => {
-                let { from, to } = getLinkCoordinates(_d.from, _d.to, graphDirection);
+                let { from/*, to*/ } = getLinkCoordinates(_d.from, _d.to, graphDirection);
 
                 return from.y;
               })
               .attr('x2', (_d: any) => {
-                let { from, to } = getLinkCoordinates(_d.from, _d.to, graphDirection);
+                let { /*from,*/ to } = getLinkCoordinates(_d.from, _d.to, graphDirection);
 
                 return to.x;
               })
               .attr('y2', (_d: any) => {
-                let { from, to } = getLinkCoordinates(_d.from, _d.to, graphDirection);
+                let { /*from,*/ to } = getLinkCoordinates(_d.from, _d.to, graphDirection);
 
                 return to.y;
               });
           })
           .on('end', (d: any) => {
-            // console.log('DRAG_END', d);
+            console.log('DRAG_END', d);
           })
       );
 
@@ -410,6 +412,8 @@ export const relativeTo = (nodeA: any, nodeB: any, graphDirection: string) => {
   if((a.x1 < b.x2) && (a.x2 > b.x1) && (a.y1 < b.y2) && (a.y2 > b.y1)) {
     return { a: 'RIGHT', b: 'RIGHT' };
   }
+
+  return null;
 };
 
 export const getNodeAnchorPoint = (node: any, point: any) => {
@@ -417,15 +421,16 @@ export const getNodeAnchorPoint = (node: any, point: any) => {
 
   switch(point) {
     case 'TOP':
-        return { x: node.x + (width / 2), y: node.y };
+      return { x: node.x + (width / 2), y: node.y };
     case 'BOTTOM':
-        return { x: node.x + (width / 2), y: node.y + height };
+      return { x: node.x + (width / 2), y: node.y + height };
     case 'LEFT':
-        return { x: node.x, y: node.y + (height / 2)};
+      return { x: node.x, y: node.y + (height / 2)};
     case 'RIGHT':
-        return { x: node.x + width, y: node.y + (height / 2)};
+      return { x: node.x + width, y: node.y + (height / 2)};
     default:
       console.log('WRONG_ANCHOR_POINT_SELECTED');
+      return null;
       break;
   }
 };

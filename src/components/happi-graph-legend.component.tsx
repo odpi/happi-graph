@@ -1,11 +1,6 @@
 import React from 'react';
 
-import { ActionIcon, Text, Switch } from '@mantine/core';
-
-import {
-  MdToggleOff,
-  MdToggleOn
-} from 'react-icons/md';
+import { Switch as MantineSwitch } from '@mantine/core';
 
 import {
   getIcon,
@@ -77,18 +72,18 @@ class HappiGraphLegend extends React.Component<Props, State> {
     return (<>
       <div className="happi-graph-legend">
         <div className="toggler">
-          <Switch label="Legend" checked={!isMinimised} onClick={() => { this.toggleMinimise() }} />
+          <MantineSwitch label="Legend" checked={!isMinimised} onClick={() => { this.toggleMinimise() }} />
         </div>
 
         <div className="contents">
           { legendData && !isMinimised && getLegendCategories(legendData).map((legendKey: any, legendKeyId: number) => {
-            return <><div className="icon-title" key={uuidv4()}>
+            return <><div className="icon-title" key={`${uuidv4()}-${legendKeyId}`}>
               <b>{ legendKey }</b>
             </div>
 
             <div className="svg-icons">
               { legendData && legendKey && getLegendLabels(legendData, legendKey).map((label: any, labelId: number) => {
-                return <div className="svg-icon" key={uuidv4()}>
+                return <div className="svg-icon" key={`${uuidv4()}-${labelId}`}>
                   <img src={ `data:image/svg+xml;utf8,${ getIcon(legendKey, label, legendData) }` } alt="icon" />
 
                   <span>{ label }</span>

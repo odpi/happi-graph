@@ -1,20 +1,19 @@
 {
   "name": "happi-graph",
-  "version": "3.0.0",
+  "version": "4.0.0",
   "description": "",
-  "main": "dist/cjs/index.js",
-  "module": "dist/esm/index.js",
+  "main": "./dist/esm/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/types/index.d.ts",
   "files": [
     "dist"
   ],
-  "types": "dist/index.d.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "rollup": "rollup -c"
+    "build:esm": "tsc"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/sarbull/react-ui-components-library.git"
+    "url": "git+https://github.com/sarbull/happi-graph.git"
   },
   "keywords": [
     "react",
@@ -24,44 +23,26 @@
   "author": "Cezar SIRBU",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/sarbull/react-ui-components-library/issues"
+    "url": "https://github.com/sarbull/happi-graph/issues"
   },
-  "homepage": "https://github.com/sarbull/react-ui-components-library#readme",
-  "dependencies": {
-    "react": "17.0.2",
-    "react-dom": "17.0.2",
-
-    "typescript": "^4.5.2",
-    "d3": "^7.3.0",
+  "homepage": "https://github.com/sarbull/happi-graph#readme",
+  "peerDependencies": {
     "@capaj/pluralize": "^1.0.4",
-    "@mantine/core": "^4.2.4",
-    "@mantine/hooks": "^4.2.4",
-    "@mantine/next": "^4.2.4",
-    "vis-network": "^9.0.4",
-    "elkjs": "^0.7.1",
-    "uuid": "^8.3.2",
+    "@mantine/core": "^4.2.8",
+    "@mantine/hooks": "^4.2.8",
+    "@mantine/next": "^4.2.8",
+    "d3": "^7.3.0",
     "egeria-js-commons": "github:odpi/egeria-js-commons",
-    "react-icons": "^4.3.1"
+    "elkjs": "^0.7.1",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-icons": "^4.3.1",
+    "uuid": "^8.3.2",
+    "vis-network": "^9.0.4"
   },
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^22.0.0",
-    "@rollup/plugin-node-resolve": "^13.3.0",
-    "@rollup/plugin-typescript": "^8.3.2",
-
-    "@types/react": "17.0.37",
-    "@types/react-dom": "17.0.11",
-
-    "@types/vis": "^4.21.23",
-    "rollup": "^2.74.1",
-    "rollup-plugin-dts": "^4.2.2",
-    "@testing-library/jest-dom": "^5.15.1",
-    "@testing-library/react": "^11.2.7",
-    "@testing-library/user-event": "^12.8.3",
-    "@types/jest": "^26.0.24",
-    "@types/d3": "^7.1.0",
-    "@types/enzyme": "^3.10.10",
-    "@types/react-router-dom": "^5.3.1",
-    "@types/uuid": "^8.3.4",
-    "enzyme": "^3.11.0"
+    "@types/react": "^17.0.45",
+    "@types/react-dom": "^17.0.17",
+    "typescript": "^4.7.3"
   }
 }
