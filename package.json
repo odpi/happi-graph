@@ -6,7 +6,8 @@
   "module": "./dist/esm/index.js",
   "types": "./dist/types/index.d.ts",
   "files": [
-    "dist"
+    "dist",
+    "src/components/happi-graph.scss"
   ],
   "scripts": {
     "build:esm": "tsc"
