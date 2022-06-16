@@ -1,23 +1,26 @@
 {
   "compilerOptions": {
+    "target": "es5",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
-    "baseUrl": ".",
-    "declaration": true,
-    "declarationDir": "dist/types",
+    "skipLibCheck": true,
     "esModuleInterop": true,
-    "jsx": "react-jsx",
-    "lib": ["DOM", "ESNext"],
-    "module": "ESNext",
-    "moduleResolution": "Node",
-    "noEmitOnError": true,
-    "outDir": "dist/esm",
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true,
+    "module": "esnext",
+    "moduleResolution": "node",
     "resolveJsonModule": true,
-    "target": "ES2015",
-    "isolatedModules": true
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx"
   },
-  "exclude": [
-    "node_modules",
-    "dist",
-    "**/**.test.tsx"
-  ],
+  "include": [
+    "src"
+  ]
 }

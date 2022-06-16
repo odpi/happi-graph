@@ -54,6 +54,8 @@ class HappiGraph extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
+    console.warn('render()');
+
     const mappedNodes = mapNodes(props.rawData.nodes, props.selectedNodeId);
     const mappedLinks = mapLinks(props.rawData.edges, mappedNodes);
 
