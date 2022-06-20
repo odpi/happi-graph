@@ -6,6 +6,9 @@
     "dist",
     "src/components/HappiGraph/happi-graph.scss"
   ],
+  "main": "./dist/esm/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/types/index.d.ts",
   "dependencies": {
     "@capaj/pluralize": "^1.0.4",
     "@mantine/core": "^4.2.9",
