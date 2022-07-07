@@ -12,6 +12,7 @@ import { AiOutlineFullscreen, AiOutlineFullscreenExit } from 'react-icons/ai';
 class HappiGraph extends React.Component {
     constructor(props) {
         super(props);
+        console.warn('render()');
         const mappedNodes = mapNodes(props.rawData.nodes, props.selectedNodeId);
         const mappedLinks = mapLinks(props.rawData.edges, mappedNodes);
         this.state = {
