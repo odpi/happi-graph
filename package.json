@@ -10,21 +10,20 @@
   "module": "./dist/esm/index.js",
   "types": "./dist/types/index.d.ts",
   "dependencies": {
-    "@capaj/pluralize": "^1.0.4",
-    "@mantine/core": "^4.2.9",
-    "@mantine/hooks": "^4.2.9",
-    "@mantine/next": "^4.2.9",
-    "d3": "^7.4.4",
-    "egeria-js-commons": "github:odpi/egeria-js-commons",
+    "@capaj/pluralize": "1.0.4",
+    "@mantine/core": "4.2.9",
+    "@mantine/hooks": "4.2.9",
+    "@mantine/next": "4.2.9",
+    "d3": "7.4.4",
+    "egeria-js-commons": "github:odpi/egeria-js-commons#react",
     "elkjs": "^0.7.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^4.4.0",
-    "typescript": "^4.7.3",
-    "uuid": "^8.3.2",
+    "uuid": "8.3.2",
     "vis-network": "^9.1.2",
-    "web-vitals": "^2.1.4",
-    "web-worker": "^1.2.0"
+    "web-vitals": "2.1.4",
+    "web-worker": "1.2.0"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -63,6 +62,7 @@
     "@types/uuid": "^8.3.4",
     "@types/vis": "^4.21.24",
     "node-sass": "^7.0.1",
-    "react-scripts": "^5.0.1"
+    "react-scripts": "^5.0.1",
+    "typescript": "^4.7.3"
   }
 }
