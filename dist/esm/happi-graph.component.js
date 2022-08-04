@@ -12,7 +12,6 @@ import { AiOutlineFullscreen, AiOutlineFullscreenExit } from 'react-icons/ai';
 class HappiGraph extends React.Component {
     constructor(props) {
         super(props);
-        console.warn('render()');
         const mappedNodes = mapNodes(props.rawData.nodes, props.selectedNodeId);
         const mappedLinks = mapLinks(props.rawData.edges, mappedNodes);
         this.state = {
@@ -76,22 +75,24 @@ class HappiGraph extends React.Component {
         }
     }
     componentDidMount() {
-        const { happiGraph } = this.state;
-        console.log("componentDidMount()", this.state);
+        const { happiGraph, debug } = this.state;
+        debug && console.log("componentDidMount()", this.state);
         this.setState({
             svg: d3.select(happiGraph.current)
         }, () => {
             this.selectAlgorithm(() => {
-                console.log('Everything is ready.');
+                debug && console.log('Everything is ready.');
                 this.init();
             });
         });
     }
     componentDidUpdate() {
-        console.log("componentDidUpdate()", this.state);
+        const { debug } = this.state;
+        debug && console.log("componentDidUpdate()", this.state);
     }
     init() {
-        console.log('init()');
+        const { debug } = this.state;
+        debug && console.log('init()');
         const { svg, nodes, links, graphDirection } = this.state;
         const allGroup = svg.append('g')
             .attr('class', 'all-group');
@@ -99,8 +100,8 @@ class HappiGraph extends React.Component {
         const nodesGroup = allGroup.append('g').attr('class', 'nodes-group');
         let svgWidth = parseInt(svg.style('width'));
         let svgHeight = parseInt(svg.style('height'));
-        console.log('svgWitdh = ', svgWidth);
-        console.log('svgHeight = ', svgHeight);
+        debug && console.log('svgWitdh = ', svgWidth);
+        debug && console.log('svgHeight = ', svgHeight);
         this.setState({
             allGroup: allGroup,
             zoom: d3.zoom()
@@ -127,8 +128,8 @@ class HappiGraph extends React.Component {
     }
     render() {
         const { actions } = this.props;
-        const { isLoading, happiGraph, zoom, svg, nodes, links, allGroup, isFullscreen } = this.state;
-        return (_jsx(_Fragment, { children: _jsxs("div", Object.assign({ className: `happi-graph-wrapper ${isFullscreen ? 'happi-graph-fullscreen' : ''}` }, { children: [isLoading && _jsx("h1", { children: "isLoading" }), _jsx("svg", Object.assign({ id: "happi-graph", ref: happiGraph }, { children: _jsxs("defs", { children: [_jsx("marker", Object.assign({ id: "arrow-start", markerWidth: "10", markerHeight: "10", refX: "0", refY: "3", orient: "auto", markerUnits: "strokeWidth" }, { children: _jsx("path", { d: "M9,0 L9,6 L0,3 z", className: "arrow" }) })), _jsx("marker", Object.assign({ id: "arrow-start-selected", markerWidth: "10", markerHeight: "10", refX: "0", refY: "3", orient: "auto", markerUnits: "strokeWidth" }, { children: _jsx("path", { d: "M9,0 L9,6 L0,3 z", className: "arrow-selected" }) })), _jsx("marker", Object.assign({ id: "arrow-end", markerWidth: "10", markerHeight: "10", refX: "7", refY: "3", orient: "auto", markerUnits: "strokeWidth" }, { children: _jsx("path", { d: "M0,0 L0,6 L9,3 z", className: "arrow" }) })), _jsx("marker", Object.assign({ id: "arrow-end-selected", markerWidth: "10", markerHeight: "10", refX: "7", refY: "3", orient: "auto", markerUnits: "strokeWidth" }, { children: _jsx("path", { d: "M0,0 L0,6 L9,3 z", className: "arrow-selected" }) }))] }) })), _jsxs("div", Object.assign({ className: "happi-graph-actions" }, { children: [_jsx(ActionIcon, Object.assign({ title: "Zoom In", variant: "hover", size: 35 }, { children: _jsx(MdZoomIn, { size: 25, onClick: () => customZoomIn(zoom, svg) }) })), _jsx(ActionIcon, Object.assign({ title: "Zoom Out", variant: "hover", size: 35 }, { children: _jsx(MdZoomOut, { size: 25, onClick: () => customZoomOut(zoom, svg) }) })), _jsx(ActionIcon, Object.assign({ title: "Fit to screen", variant: "hover", size: 35 }, { children: _jsx(MdOutlineCenterFocusWeak, { size: 25, onClick: () => centerGraph(allGroup, svg, zoom) }) })), _jsxs(ActionIcon, Object.assign({ title: "Fullscreen", variant: "hover", size: 35 }, { children: [!isFullscreen && _jsx(AiOutlineFullscreen, { size: 25, onClick: () => this.setFullscreen() }), isFullscreen && _jsx(AiOutlineFullscreenExit, { size: 25, onClick: () => this.setFullscreen() })] })), actions] })), _jsx("div", Object.assign({ className: "happi-graph-legend-wrapper" }, { children: _jsx(HappiGraphLegend, { nodes: nodes, links: links }) }))] })) }));
+        const { isLoading, happiGraph, zoom, svg, nodes, links, allGroup, isFullscreen, debug } = this.state;
+        return (_jsx(_Fragment, { children: _jsxs("div", Object.assign({ className: `happi-graph-wrapper ${isFullscreen ? 'happi-graph-fullscreen' : ''}` }, { children: [isLoading && _jsx("h1", { children: "isLoading" }), _jsx("svg", Object.assign({ id: "happi-graph", ref: happiGraph }, { children: _jsxs("defs", { children: [_jsx("marker", Object.assign({ id: "arrow-start", markerWidth: "10", markerHeight: "10", refX: "0", refY: "3", orient: "auto", markerUnits: "strokeWidth" }, { children: _jsx("path", { d: "M9,0 L9,6 L0,3 z", className: "arrow" }) })), _jsx("marker", Object.assign({ id: "arrow-start-selected", markerWidth: "10", markerHeight: "10", refX: "0", refY: "3", orient: "auto", markerUnits: "strokeWidth" }, { children: _jsx("path", { d: "M9,0 L9,6 L0,3 z", className: "arrow-selected" }) })), _jsx("marker", Object.assign({ id: "arrow-end", markerWidth: "10", markerHeight: "10", refX: "7", refY: "3", orient: "auto", markerUnits: "strokeWidth" }, { children: _jsx("path", { d: "M0,0 L0,6 L9,3 z", className: "arrow" }) })), _jsx("marker", Object.assign({ id: "arrow-end-selected", markerWidth: "10", markerHeight: "10", refX: "7", refY: "3", orient: "auto", markerUnits: "strokeWidth" }, { children: _jsx("path", { d: "M0,0 L0,6 L9,3 z", className: "arrow-selected" }) }))] }) })), _jsxs("div", Object.assign({ className: "happi-graph-actions" }, { children: [_jsx(ActionIcon, Object.assign({ title: "Zoom In", variant: "hover", size: 35 }, { children: _jsx(MdZoomIn, { size: 25, onClick: () => customZoomIn(zoom, svg) }) })), _jsx(ActionIcon, Object.assign({ title: "Zoom Out", variant: "hover", size: 35 }, { children: _jsx(MdZoomOut, { size: 25, onClick: () => customZoomOut(zoom, svg) }) })), _jsx(ActionIcon, Object.assign({ title: "Fit to screen", variant: "hover", size: 35 }, { children: _jsx(MdOutlineCenterFocusWeak, { size: 25, onClick: () => centerGraph(allGroup, svg, zoom) }) })), _jsxs(ActionIcon, Object.assign({ title: "Fullscreen", variant: "hover", size: 35 }, { children: [!isFullscreen && _jsx(AiOutlineFullscreen, { size: 25, onClick: () => this.setFullscreen() }), isFullscreen && _jsx(AiOutlineFullscreenExit, { size: 25, onClick: () => this.setFullscreen() })] })), actions] })), _jsx("div", Object.assign({ className: "happi-graph-legend-wrapper" }, { children: _jsx(HappiGraphLegend, { nodes: nodes, links: links, debug: debug }) }))] })) }));
     }
 }
 export default HappiGraph;
