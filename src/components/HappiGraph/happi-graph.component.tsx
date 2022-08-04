@@ -54,8 +54,6 @@ class HappiGraph extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
-    console.warn('render()');
-
     const mappedNodes = mapNodes(props.rawData.nodes, props.selectedNodeId);
     const mappedLinks = mapLinks(props.rawData.edges, mappedNodes);
 
@@ -142,26 +140,30 @@ class HappiGraph extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    const { happiGraph } = this.state;
+    const { happiGraph, debug } = this.state;
 
-    console.log("componentDidMount()", this.state);
+    debug && console.log("componentDidMount()", this.state);
 
     this.setState({
       svg: d3.select(happiGraph.current)
     }, () => {
       this.selectAlgorithm(() => {
-        console.log('Everything is ready.');
+        debug && console.log('Everything is ready.');
         this.init();
       });
     });
   }
 
   componentDidUpdate() {
-    console.log("componentDidUpdate()", this.state);
+    const { debug } = this.state;
+
+    debug && console.log("componentDidUpdate()", this.state);
   }
 
   init() {
-    console.log('init()');
+    const { debug } = this.state;
+
+    debug && console.log('init()');
     const { svg, nodes, links, graphDirection } = this.state;
 
     const allGroup =
@@ -174,8 +176,8 @@ class HappiGraph extends React.Component<Props, State> {
     let svgWidth = parseInt(svg.style('width'));
     let svgHeight = parseInt(svg.style('height'));
 
-    console.log('svgWitdh = ', svgWidth);
-    console.log('svgHeight = ', svgHeight);
+    debug && console.log('svgWitdh = ', svgWidth);
+    debug && console.log('svgHeight = ', svgHeight);
 
     this.setState({
       allGroup: allGroup,
@@ -225,7 +227,8 @@ class HappiGraph extends React.Component<Props, State> {
       nodes,
       links,
       allGroup,
-      isFullscreen
+      isFullscreen,
+      debug
     } = this.state;
 
     return (<>
@@ -298,7 +301,7 @@ class HappiGraph extends React.Component<Props, State> {
         </div>
 
         <div className="happi-graph-legend-wrapper">
-          <HappiGraphLegend nodes={nodes} links={links}/>
+          <HappiGraphLegend nodes={nodes} links={links} debug={debug}/>
         </div>
       </div>
     </>);

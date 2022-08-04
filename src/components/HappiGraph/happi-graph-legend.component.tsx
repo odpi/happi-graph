@@ -10,11 +10,10 @@ import {
   graphNodesUpdateInLegendData
 } from './happi-graph-legend.render';
 
-import { v4 as uuidv4 } from 'uuid';
-
 interface Props {
   nodes: any;
   links: any;
+  debug?: boolean;
 }
 
 interface State {
@@ -22,6 +21,7 @@ interface State {
   links: any;
   isMinimised: boolean;
   legendData: any;
+  debug: boolean;
 }
 
 /**
@@ -37,6 +37,7 @@ class HappiGraphLegend extends React.Component<Props, State> {
     super(props);
 
     this.state = {
+      debug: props.debug ? true : false,
       nodes: [...props.nodes],
       links: [...props.links],
       isMinimised: true,
@@ -50,7 +51,7 @@ class HappiGraphLegend extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    const { nodes, links } = this.state;
+    const { nodes, links, debug } = this.state;
 
     let data = {};
 
@@ -59,7 +60,7 @@ class HappiGraphLegend extends React.Component<Props, State> {
       ...graphNodesUpdateInLegendData(nodes)
     };
 
-    console.log(data);
+    debug && console.log(data);
 
     this.setState({
       legendData: { ...data }
@@ -72,25 +73,25 @@ class HappiGraphLegend extends React.Component<Props, State> {
     return (<>
       <div className="happi-graph-legend">
         <div className="toggler">
-          <MantineSwitch label="Legend" checked={!isMinimised} onClick={() => { this.toggleMinimise() }} />
+          <MantineSwitch label="Legend" checked={!isMinimised} onChange={() => { this.toggleMinimise() }} />
         </div>
 
         <div className="contents">
           { legendData && !isMinimised && getLegendCategories(legendData).map((legendKey: any, legendKeyId: number) => {
-            return <><div className="icon-title" key={`${uuidv4()}-${legendKeyId}`}>
+            return <div key={legendKeyId}><div className="icon-title">
               <b>{ legendKey }</b>
             </div>
 
             <div className="svg-icons">
               { legendData && legendKey && getLegendLabels(legendData, legendKey).map((label: any, labelId: number) => {
-                return <div className="svg-icon" key={`${uuidv4()}-${labelId}`}>
+                return <div className="svg-icon" key={`${labelId}`}>
                   <img src={ `data:image/svg+xml;utf8,${ getIcon(legendKey, label, legendData) }` } alt="icon" />
 
                   <span>{ label }</span>
                 </div>
               }) }
             </div>
-          </>}) }
+          </div>}) }
         </div>
       </div>
     </>);
