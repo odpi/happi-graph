@@ -2,12 +2,14 @@ import React from 'react';
 interface Props {
     nodes: any;
     links: any;
+    debug?: boolean;
 }
 interface State {
     nodes: any;
     links: any;
     isMinimised: boolean;
     legendData: any;
+    debug: boolean;
 }
 /**
  *
