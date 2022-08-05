@@ -3,6 +3,7 @@ interface Props {
     actions: any;
     algorithm?: string;
     selectedNodeId: string;
+    onNodeClick?: Function;
     rawData: any;
     debug?: boolean;
     graphDirection?: string;

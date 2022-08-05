@@ -111,10 +111,11 @@ class HappiGraph extends React.Component {
             })
         }, () => {
             const { zoom } = this.state;
+            const { onNodeClick } = this.props;
             svg
                 .call(zoom)
                 .on('dblclick.zoom', null);
-            addNodes(nodes, nodesGroup, graphDirection);
+            addNodes(nodes, nodesGroup, graphDirection, onNodeClick);
             addLinks(links, linksGroup, graphDirection, nodes);
             centerGraph(allGroup, svg, zoom);
         });
