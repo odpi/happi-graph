@@ -23,6 +23,7 @@ interface Props {
   actions: any;
   algorithm?: string;
   selectedNodeId: string;
+  onNodeClick?: Function;
   rawData: any;
   debug?: boolean;
   graphDirection?: string;
@@ -188,12 +189,13 @@ class HappiGraph extends React.Component<Props, State> {
               })
     }, () => {
       const { zoom } = this.state;
+      const { onNodeClick } = this.props;
 
       svg
         .call(zoom)
         .on('dblclick.zoom', null);
 
-      addNodes(nodes, nodesGroup, graphDirection);
+      addNodes(nodes, nodesGroup, graphDirection, onNodeClick);
       addLinks(links, linksGroup, graphDirection, nodes);
 
       centerGraph(allGroup, svg, zoom);

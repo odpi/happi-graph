@@ -197,7 +197,7 @@ const addHeader = (nodeGroup: any) => {
     .text((d: any) => d.label);
 };
 
-const addNodes = (nodes: any, nodesGroup: any, graphDirection: string) => {
+const addNodes = (nodes: any, nodesGroup: any, graphDirection: string, onNodeClick?: Function) => {
   let _nodesGroup: any = nodesGroup
                           .selectAll()
                           .data(nodes)
@@ -208,7 +208,7 @@ const addNodes = (nodes: any, nodesGroup: any, graphDirection: string) => {
       .append('g')
       .classed('node-group', true)
       .attr('id', (d: any) => d.id)
-      .on('click', () => { console.log('CLICKED'); })
+      .on('click', (d: any) => { onNodeClick ? onNodeClick(d.target.__data__) : console.log('ON_NODE_CLICK_NOT_IMPLEMENTED'); })
       .attr('transform', (d: any) => `translate(${d.x}, ${d.y})`)
       .call(
         d3.drag()
