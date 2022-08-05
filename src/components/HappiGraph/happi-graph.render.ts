@@ -208,7 +208,7 @@ const addNodes = (nodes: any, nodesGroup: any, graphDirection: string, onNodeCli
       .append('g')
       .classed('node-group', true)
       .attr('id', (d: any) => d.id)
-      .on('click', (d: any) => { onNodeClick ? onNodeClick(d.target.__data__) : console.log('CLICKED'); })
+      .on('click', (d: any) => { onNodeClick ? onNodeClick(d.target.__data__) : console.log('ON_NODE_CLICK_NOT_IMPLEMENTED'); })
       .attr('transform', (d: any) => `translate(${d.x}, ${d.y})`)
       .call(
         d3.drag()
