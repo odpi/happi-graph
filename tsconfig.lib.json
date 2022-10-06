@@ -5,6 +5,7 @@
     "declaration": true,
     "declarationDir": "dist/types",
     "esModuleInterop": true,
+    "isolatedModules": true,
     "jsx": "react-jsx",
     "lib": ["DOM", "ESNext"],
     "module": "ESNext",
@@ -12,14 +13,13 @@
     "noEmitOnError": true,
     "outDir": "dist/esm",
     "resolveJsonModule": true,
-    "target": "ES2015",
-    "isolatedModules": true
+    "skipLibCheck": true,
+    "target": "ES2015"
   },
   "files": [
     "src/components/HappiGraph/index.ts"
   ],
   "exclude": [
-    "node_modules",
     "dist",
     "**/**.test.tsx"
   ],
