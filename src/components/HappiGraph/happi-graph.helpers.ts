@@ -1,4 +1,4 @@
-import { itemGroupIconMap } from 'egeria-js-commons';
+import { itemGroupIconMap } from '@lfai/egeria-js-commons';
 
 const getNodeHeight = (length: number) => {
   let defaultHeight = 70;
