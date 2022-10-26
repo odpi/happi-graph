@@ -1,6 +1,6 @@
 {
   "name": "@lfai/happi-graph",
-  "version": "4.0.1",
+  "version": "4.0.2",
   "files": [
     "dist",
     "src/components/HappiGraph/happi-graph.scss"
