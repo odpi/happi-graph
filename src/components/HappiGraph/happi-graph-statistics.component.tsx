@@ -72,7 +72,7 @@ class HappiGraphStatistics extends React.Component<Props, State> {
     const { data, opened } = this.state;
 
     return (<>
-      <ActionIcon title="Statistics" variant="hover" size={35}>
+      <ActionIcon title="Statistics" variant="subtle" size={35}>
         <IoMdStats size={25} onClick={() => this.setOpened(true)} />
       </ActionIcon>
 

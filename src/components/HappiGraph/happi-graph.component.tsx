@@ -282,19 +282,19 @@ class HappiGraph extends React.Component<Props, State> {
         </svg>
 
         <div className="happi-graph-actions">
-          <ActionIcon title="Zoom In" variant="hover" size={35}>
+          <ActionIcon title="Zoom In" variant="subtle" size={35}>
             <MdZoomIn size={25} onClick={() => customZoomIn(zoom, svg) } />
           </ActionIcon>
 
-          <ActionIcon title="Zoom Out" variant="hover" size={35}>
+          <ActionIcon title="Zoom Out" variant="subtle" size={35}>
             <MdZoomOut size={25} onClick={() => customZoomOut(zoom, svg) } />
           </ActionIcon>
 
-          <ActionIcon title="Fit to screen" variant="hover" size={35}>
+          <ActionIcon title="Fit to screen" variant="subtle" size={35}>
             <MdOutlineCenterFocusWeak size={25} onClick={() => centerGraph(allGroup, svg, zoom) } />
           </ActionIcon>
 
-          <ActionIcon title="Fullscreen" variant="hover" size={35}>
+          <ActionIcon title="Fullscreen" variant="subtle" size={35}>
             { !isFullscreen && <AiOutlineFullscreen size={25} onClick={() => this.setFullscreen() } /> }
             { isFullscreen && <AiOutlineFullscreenExit size={25} onClick={() => this.setFullscreen() } /> }
           </ActionIcon>

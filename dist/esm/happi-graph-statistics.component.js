@@ -52,7 +52,7 @@ class HappiGraphStatistics extends React.Component {
     }
     render() {
         const { data, opened } = this.state;
-        return (_jsxs(_Fragment, { children: [_jsx(ActionIcon, Object.assign({ title: "Statistics", variant: "hover", size: 35 }, { children: _jsx(IoMdStats, { size: 25, onClick: () => this.setOpened(true) }) })), _jsx(Modal, Object.assign({ opened: opened, onClose: () => this.setOpened(false), centered: true, title: "Statistics" }, { children: _jsxs(Table, Object.assign({ striped: true, highlightOnHover: true }, { children: [_jsx("thead", { children: _jsxs("tr", { children: [_jsx("th", { children: "Key" }), _jsx("th", { children: "Occurences" })] }) }), _jsx("tbody", { children: data && data.map((d, i) => (_jsxs("tr", { children: [_jsx("td", { children: d.key }), _jsx("td", { children: d.occurrences })] }, i))) })] })) }))] }));
+        return (_jsxs(_Fragment, { children: [_jsx(ActionIcon, Object.assign({ title: "Statistics", variant: "subtle", size: 35 }, { children: _jsx(IoMdStats, { size: 25, onClick: () => this.setOpened(true) }) })), _jsx(Modal, Object.assign({ opened: opened, onClose: () => this.setOpened(false), centered: true, title: "Statistics" }, { children: _jsxs(Table, Object.assign({ striped: true, highlightOnHover: true }, { children: [_jsx("thead", { children: _jsxs("tr", { children: [_jsx("th", { children: "Key" }), _jsx("th", { children: "Occurences" })] }) }), _jsx("tbody", { children: data && data.map((d, i) => (_jsxs("tr", { children: [_jsx("td", { children: d.key }), _jsx("td", { children: d.occurrences })] }, i))) })] })) }))] }));
     }
 }
 export default HappiGraphStatistics;

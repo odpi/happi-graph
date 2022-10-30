@@ -332,7 +332,6 @@ export const getNodeAnchorPoint = (node, point) => {
         default:
             console.log('WRONG_ANCHOR_POINT_SELECTED');
             return null;
-            break;
     }
 };
 export const getLinkCoordinates = (nodeA, nodeB, graphDirection) => {
