@@ -431,7 +431,6 @@ export const getNodeAnchorPoint = (node: any, point: any) => {
     default:
       console.log('WRONG_ANCHOR_POINT_SELECTED');
       return null;
-      break;
   }
 };
 

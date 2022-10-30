@@ -68,7 +68,7 @@ class HappiGraphListOfRelationships extends React.Component<Props, State> {
     const { data, opened } = this.state;
 
     return (<>
-      <ActionIcon title="List of Relationships" variant="hover" size={35}>
+      <ActionIcon title="List of Relationships" variant="subtle" size={35}>
         <BsCardChecklist size={25} onClick={() => this.setOpened(true)} />
       </ActionIcon>
 
