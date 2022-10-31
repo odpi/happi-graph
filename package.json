@@ -1,6 +1,6 @@
 {
   "name": "@lfai/happi-graph",
-  "version": "4.0.6",
+  "version": "4.0.7",
   "description": "Generic graph rendering solution.",
   "license": "Apache-2.0",
   "repository": {

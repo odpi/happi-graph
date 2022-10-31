@@ -1,4 +1,4 @@
-name: egeria-js-commons publish
+name: happi-graph publish
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
-    if: github.repository == 'odpi/egeria-js-commons'
+    if: github.repository == 'odpi/happi-graph'
     steps:
       - name: Checkout source
         uses: actions/checkout@v3.1.0
