@@ -3,7 +3,7 @@ import * as d3 from "d3";
 // import "./happi-graph.scss";
 import { mapLinks, mapNodes } from "./happi-graph.helpers";
 import { elkApproach, visApproach } from "./happi-graph.algorithms";
-import { addLinks, addNodes, centerGraph, customZoomIn, customZoomOut } from "./happi-graph.render";
+import { addLinks, addNodes, centerGraph, customZoomIn, customZoomOut, initCenterGraph } from "./happi-graph.render";
 import HappiGraphLegend from "./happi-graph-legend.component";
 
 import { ActionIcon } from '@mantine/core';
@@ -31,6 +31,7 @@ interface Props {
   nodeDistanceX?: number;
   nodeDistanceY?: number;
   printMode?: boolean;
+  onGraphRender?: Function;
 }
 
 interface State {
@@ -145,6 +146,7 @@ class HappiGraph extends React.Component<Props, State> {
 
   componentDidMount() {
     const { happiGraph, debug } = this.state;
+    const { onGraphRender } = this.props;
 
     debug && console.log("componentDidMount()", this.state);
 
@@ -153,7 +155,7 @@ class HappiGraph extends React.Component<Props, State> {
     }, () => {
       this.selectAlgorithm(() => {
         debug && console.log('Everything is ready.');
-        this.init();
+        this.init(onGraphRender || (() => {}));
       });
     });
   }
@@ -164,7 +166,7 @@ class HappiGraph extends React.Component<Props, State> {
     debug && console.log("componentDidUpdate()", this.state);
   }
 
-  init() {
+  init(callback: Function) {
     const { debug } = this.state;
 
     debug && console.log('init()');
@@ -200,8 +202,8 @@ class HappiGraph extends React.Component<Props, State> {
 
       addNodes(nodes, nodesGroup, graphDirection, onNodeClick);
       addLinks(links, linksGroup, graphDirection, nodes);
-
-      centerGraph(allGroup, svg, zoom);
+      
+      initCenterGraph(allGroup, svg, zoom, callback);
     });
   }
 
@@ -216,7 +218,6 @@ class HappiGraph extends React.Component<Props, State> {
         svg,
         zoom
       } = this.state;
-
         centerGraph(allGroup, svg, zoom);
     });
 
