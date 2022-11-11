@@ -350,8 +350,6 @@ const centerGraph = (allGroup: any, svg: any, zoom: any, callback?: Function) =>
   );
 
   centerToCoordinates(data, scaledBy, svg, zoom, callback || (() => {}));
-  
-  // firstRender ? centerToCoordinates(data, scaledBy, svg, zoom, callback) : centerToCoordinates(data, scaledBy, svg, zoom, () => {});
 }
 
 const customZoom = (value: number, zoom: any, svg: any) => {
