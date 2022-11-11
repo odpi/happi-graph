@@ -301,7 +301,7 @@ const addNodes = (nodes: any, nodesGroup: any, graphDirection: string, onNodeCli
 };
 
 
-const centerToCoordinates = function (data: any, scaledBy: any, svg: any, zoom: any) {
+const centerToCoordinates = function (data: any, scaledBy: any, svg: any, zoom: any, callback: Function) {
   let { x, y, width, height } = data;
 
   let svgWidth = parseInt(svg.style('width'));
@@ -321,10 +321,16 @@ const centerToCoordinates = function (data: any, scaledBy: any, svg: any, zoom: 
           svgCenter.y - ((y * scaledBy) + (height * scaledBy) / 2)
         )
         .scale(scaledBy)
-    )
+    ).on('end', () => {
+      callback();
+    });
 }
 
-const centerGraph = (allGroup: any, svg: any, zoom: any) => {
+const initCenterGraph = (allGroup: any, svg: any, zoom: any, callback: Function) => {
+  centerGraph(allGroup, svg, zoom, callback);
+}
+
+const centerGraph = (allGroup: any, svg: any, zoom: any, callback?: Function) => {
   let graphBBox = allGroup.node().getBBox();
 
   let svgWidth = parseInt(svg.style('width'));
@@ -343,7 +349,7 @@ const centerGraph = (allGroup: any, svg: any, zoom: any) => {
     1
   );
 
-  centerToCoordinates(data, scaledBy, svg, zoom);
+  centerToCoordinates(data, scaledBy, svg, zoom, callback || (() => {}));
 }
 
 const customZoom = (value: number, zoom: any, svg: any) => {
@@ -549,6 +555,7 @@ export {
   addNodes,
   addLinks,
   centerGraph,
+  initCenterGraph,
   customZoom,
   customZoomIn,
   customZoomOut,
