@@ -67,7 +67,7 @@
     "@types/react-dom": "^18.0.5",
     "@types/uuid": "^8.3.4",
     "@types/vis": "^4.21.24",
-    "node-sass": "^7.0.1",
+    "node-sass": "^8.0.0",
     "react-scripts": "^5.0.1",
     "typescript": "^4.8.4"
   }
