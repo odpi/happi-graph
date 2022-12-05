@@ -53,7 +53,7 @@
     "react-dom": "^18.2.0",
     "react-icons": "^4.4.0",
     "vis-network": "^9.1.2",
-    "web-vitals": "3.0.4",
+    "web-vitals": "3.1.0",
     "web-worker": "1.2.0"
   },
   "devDependencies": {
