@@ -3,7 +3,7 @@ import * as d3 from "d3";
 // import "./happi-graph.scss";
 import { mapLinks, mapNodes } from "./happi-graph.helpers";
 import { elkApproach, visApproach } from "./happi-graph.algorithms";
-import { addLinks, addNodes, centerGraph, customZoomIn, customZoomOut } from "./happi-graph.render";
+import { addLinks, addNodes, centerGraph, customZoomIn, customZoomOut, initCenterGraph } from "./happi-graph.render";
 import HappiGraphLegend from "./happi-graph-legend.component";
 
 import { ActionIcon } from '@mantine/core';
@@ -30,6 +30,8 @@ interface Props {
   nodeCountLimit?: number;
   nodeDistanceX?: number;
   nodeDistanceY?: number;
+  printMode?: boolean;
+  onGraphRender?: Function;
 }
 
 interface State {
@@ -49,6 +51,7 @@ interface State {
   zoom: any;
   allGroup: any;
   isFullscreen: boolean;
+  printMode: boolean;
 }
 
 class HappiGraph extends React.Component<Props, State> {
@@ -74,7 +77,8 @@ class HappiGraph extends React.Component<Props, State> {
       svg: null,
       zoom: null,
       allGroup: null,
-      isFullscreen: false
+      isFullscreen: false,
+      printMode: props.printMode ? true : false
     };
   }
 
@@ -142,6 +146,7 @@ class HappiGraph extends React.Component<Props, State> {
 
   componentDidMount() {
     const { happiGraph, debug } = this.state;
+    const { onGraphRender } = this.props;
 
     debug && console.log("componentDidMount()", this.state);
 
@@ -150,7 +155,7 @@ class HappiGraph extends React.Component<Props, State> {
     }, () => {
       this.selectAlgorithm(() => {
         debug && console.log('Everything is ready.');
-        this.init();
+        this.init(onGraphRender || (() => {}));
       });
     });
   }
@@ -161,7 +166,7 @@ class HappiGraph extends React.Component<Props, State> {
     debug && console.log("componentDidUpdate()", this.state);
   }
 
-  init() {
+  init(callback: Function) {
     const { debug } = this.state;
 
     debug && console.log('init()');
@@ -197,8 +202,8 @@ class HappiGraph extends React.Component<Props, State> {
 
       addNodes(nodes, nodesGroup, graphDirection, onNodeClick);
       addLinks(links, linksGroup, graphDirection, nodes);
-
-      centerGraph(allGroup, svg, zoom);
+      
+      initCenterGraph(allGroup, svg, zoom, callback);
     });
   }
 
@@ -213,7 +218,6 @@ class HappiGraph extends React.Component<Props, State> {
         svg,
         zoom
       } = this.state;
-
         centerGraph(allGroup, svg, zoom);
     });
 
@@ -230,7 +234,8 @@ class HappiGraph extends React.Component<Props, State> {
       links,
       allGroup,
       isFullscreen,
-      debug
+      debug,
+      printMode
     } = this.state;
 
     return (<>
@@ -281,30 +286,32 @@ class HappiGraph extends React.Component<Props, State> {
           </defs>
         </svg>
 
-        <div className="happi-graph-actions">
-          <ActionIcon title="Zoom In" variant="subtle" size={35}>
-            <MdZoomIn size={25} onClick={() => customZoomIn(zoom, svg) } />
-          </ActionIcon>
+        { !printMode && <>
+          <div className="happi-graph-actions">
+            <ActionIcon title="Zoom In" variant="subtle" size={35}>
+              <MdZoomIn size={25} onClick={() => customZoomIn(zoom, svg) } />
+            </ActionIcon>
 
-          <ActionIcon title="Zoom Out" variant="subtle" size={35}>
-            <MdZoomOut size={25} onClick={() => customZoomOut(zoom, svg) } />
-          </ActionIcon>
+            <ActionIcon title="Zoom Out" variant="subtle" size={35}>
+              <MdZoomOut size={25} onClick={() => customZoomOut(zoom, svg) } />
+            </ActionIcon>
 
-          <ActionIcon title="Fit to screen" variant="subtle" size={35}>
-            <MdOutlineCenterFocusWeak size={25} onClick={() => centerGraph(allGroup, svg, zoom) } />
-          </ActionIcon>
+            <ActionIcon title="Fit to screen" variant="subtle" size={35}>
+              <MdOutlineCenterFocusWeak size={25} onClick={() => centerGraph(allGroup, svg, zoom) } />
+            </ActionIcon>
 
-          <ActionIcon title="Fullscreen" variant="subtle" size={35}>
-            { !isFullscreen && <AiOutlineFullscreen size={25} onClick={() => this.setFullscreen() } /> }
-            { isFullscreen && <AiOutlineFullscreenExit size={25} onClick={() => this.setFullscreen() } /> }
-          </ActionIcon>
+            <ActionIcon title="Fullscreen" variant="subtle" size={35}>
+              { !isFullscreen && <AiOutlineFullscreen size={25} onClick={() => this.setFullscreen() } /> }
+              { isFullscreen && <AiOutlineFullscreenExit size={25} onClick={() => this.setFullscreen() } /> }
+            </ActionIcon>
 
-          { actions }
-        </div>
+            { actions }
+          </div>
 
-        <div className="happi-graph-legend-wrapper">
-          <HappiGraphLegend nodes={nodes} links={links} debug={debug}/>
-        </div>
+          <div className="happi-graph-legend-wrapper">
+            <HappiGraphLegend nodes={nodes} links={links} debug={debug}/>
+          </div>
+        </> }
       </div>
     </>);
   }
