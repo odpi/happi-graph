@@ -6,7 +6,7 @@ import { elkApproach, visApproach } from "./happi-graph.algorithms";
 import { addLinks, addNodes, centerGraph, customZoomIn, customZoomOut, initCenterGraph } from "./happi-graph.render";
 import HappiGraphLegend from "./happi-graph-legend.component";
 
-import { ActionIcon } from '@mantine/core';
+import { ActionIcon, Tooltip } from '@mantine/core';
 
 import {
   MdZoomIn,
@@ -202,7 +202,7 @@ class HappiGraph extends React.Component<Props, State> {
 
       addNodes(nodes, nodesGroup, graphDirection, onNodeClick);
       addLinks(links, linksGroup, graphDirection, nodes);
-      
+
       initCenterGraph(allGroup, svg, zoom, callback);
     });
   }
@@ -288,22 +288,30 @@ class HappiGraph extends React.Component<Props, State> {
 
         { !printMode && <>
           <div className="happi-graph-actions">
-            <ActionIcon title="Zoom In" variant="subtle" size={35}>
+          <Tooltip label="Zoom in" position="right">
+            <ActionIcon variant="subtle" size={35}>
               <MdZoomIn size={25} onClick={() => customZoomIn(zoom, svg) } />
             </ActionIcon>
+          </Tooltip>
 
-            <ActionIcon title="Zoom Out" variant="subtle" size={35}>
+          <Tooltip label="Zoom out" position="right">
+            <ActionIcon variant="subtle" size={35}>
               <MdZoomOut size={25} onClick={() => customZoomOut(zoom, svg) } />
             </ActionIcon>
+          </Tooltip>
 
-            <ActionIcon title="Fit to screen" variant="subtle" size={35}>
+          <Tooltip label="Fit to screen" position="right">
+            <ActionIcon variant="subtle" size={35}>
               <MdOutlineCenterFocusWeak size={25} onClick={() => centerGraph(allGroup, svg, zoom) } />
             </ActionIcon>
+          </Tooltip>
 
-            <ActionIcon title="Fullscreen" variant="subtle" size={35}>
+          <Tooltip label="Fullscreen" position="right">
+            <ActionIcon variant="subtle" size={35}>
               { !isFullscreen && <AiOutlineFullscreen size={25} onClick={() => this.setFullscreen() } /> }
               { isFullscreen && <AiOutlineFullscreenExit size={25} onClick={() => this.setFullscreen() } /> }
             </ActionIcon>
+          </Tooltip>
 
             { actions }
           </div>

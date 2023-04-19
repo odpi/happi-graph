@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, Table, ActionIcon } from '@mantine/core';
+import { Modal, Table, ActionIcon, Tooltip } from '@mantine/core';
 import {
   BsCardChecklist
 } from 'react-icons/bs';
@@ -68,9 +68,11 @@ class HappiGraphListOfRelationships extends React.Component<Props, State> {
     const { data, opened } = this.state;
 
     return (<>
-      <ActionIcon title="List of Relationships" variant="subtle" size={35}>
+    <Tooltip label="List of Relationships" position="right">
+      <ActionIcon variant="subtle" size={35}>
         <BsCardChecklist size={25} onClick={() => this.setOpened(true)} />
       </ActionIcon>
+    </Tooltip>
 
 
       <Modal
