@@ -40,10 +40,10 @@ class HappiGraphListOfRelationships extends React.Component<Props, State> {
     if(links.length) {
       graphMappings = [
         ...Object(links).map((e: any) => {
-          let fromNode = nodes
+          const fromNode = nodes
               .filter((n: any) => n.id === e.from)
               .pop();
-          let toNode = nodes
+          const toNode = nodes
               .filter((n: any) => n.id === e.to)
               .pop();
           return {
