@@ -8,7 +8,7 @@ Generic graph rendering solution.
 * `algorithm` (`string`, default: `ELK`)\
   There are two algorithm used: ELK and VISJS. These are used to draw separately horizontal and/or vertical graphs.
 * `debug` (`boolean`, default: `false`)\
-  Flag used to log different information for debugging.        
+  Flag used to log different information for debugging.
 * `graphDirection` (`string`, default: `HORIZONTAL`)\
   Type of graph, horizontal or vertical. It determines the direction of the graph.
 * `nodeCountLimit` (`number`, default: `0`)\
@@ -29,7 +29,7 @@ Generic graph rendering solution.
   Id of the main node around which the graph is constructed.
 
 ## Print mode for lineage
-This mode enables to display only the lineage graph, without the action buttons and legend. 
+This mode enables to display only the lineage graph, without the action buttons and legend.
 
 It can be activated by setting _printMode_, by default it is **false**.
 
