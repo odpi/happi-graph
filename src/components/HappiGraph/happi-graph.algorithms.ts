@@ -2,11 +2,11 @@ import { DataSet, Network } from 'vis-network/standalone/index';
 import ELK from 'elkjs';
 
 const visApproach = (nodes: any, links: any, graphDirection: string, nodeDistanceX: number, nodeDistanceY: number) => {
-  let nodeMap: any = {};
+  const nodeMap: any = {};
 
   const _nodes: any = new DataSet([
     ...nodes.map((n: any) => {
-      let _node = {
+      const _node = {
         ...n,
         value2: n.value
       };
@@ -27,7 +27,7 @@ const visApproach = (nodes: any, links: any, graphDirection: string, nodeDistanc
   ]);
 
  // /*
- let options = {
+ const options = {
     autoResize: true,
     physics:{
       enabled:false,
@@ -56,15 +56,15 @@ const visApproach = (nodes: any, links: any, graphDirection: string, nodeDistanc
     }
   };
 
-  let data = {
+  const data = {
     nodes: _nodes,
     edges: edges
   };
 
-  let e = document.createElement('div');
-  let network = new Network(e, data, options);
+  const e = document.createElement('div');
+  const network = new Network(e, data, options);
 
-  let positions = network.getPositions();
+  const positions = network.getPositions();
 
   const finalNodes = Object.keys(positions).map(id => {
     return {
@@ -89,7 +89,7 @@ const visApproach = (nodes: any, links: any, graphDirection: string, nodeDistanc
   };
 };
 
-const elkApproach = (nodes: any, links: any, graphDirection: string, nodeDistanceX: number, nodeDistanceY: number, callback: Function) => {
+const elkApproach = (nodes: any, links: any, graphDirection: string, nodeDistanceX: number, nodeDistanceY: number, callback: any) => {
   const elk = new ELK({});
 
   const graph = {

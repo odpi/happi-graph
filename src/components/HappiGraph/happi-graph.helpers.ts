@@ -1,9 +1,9 @@
 import { itemGroupIconMap } from '@lfai/egeria-js-commons';
 
 const getNodeHeight = (length: number) => {
-  let defaultHeight = 70;
+  const defaultHeight = 70;
 
-  let computedHeight =
+  const computedHeight =
     (length >= 1 ? (length * 30) : 0);
 
   return defaultHeight + computedHeight;
@@ -11,10 +11,10 @@ const getNodeHeight = (length: number) => {
 
 const mapNodes = (nodes: any, selectedNodeId: string) => {
   return nodes.map((n:any) => {
-    let keys = Object.keys(n.properties ? n.properties : {});
+    const keys = Object.keys(n.properties ? n.properties : {});
 
-    let props = keys.map(k => {
-      let camelCased = k.charAt(0).toUpperCase() + k.slice(1);
+    const props = keys.map(k => {
+      const camelCased = k.charAt(0).toUpperCase() + k.slice(1);
 
       return {
         value: n.properties[k],
@@ -24,7 +24,7 @@ const mapNodes = (nodes: any, selectedNodeId: string) => {
       }
     });
 
-    let result = {
+    const result = {
       id: n.id,
       type: itemGroupIconMap[n.group] ? itemGroupIconMap[n.group].icon : 'simple-square',
       value: n.label ? n.label : 'N/A',
