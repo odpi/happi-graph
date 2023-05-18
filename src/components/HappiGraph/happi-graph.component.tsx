@@ -70,7 +70,6 @@ interface State {
 class HappiGraph extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
-    console.log("HAPPI-GRAPH Init");
     const mappedNodes = mapNodes(props.rawData.nodes, props.selectedNodeId);
     const mappedLinks = mapLinks(props.rawData.edges, mappedNodes);
     let selectedGraphType;
@@ -167,9 +166,6 @@ class HappiGraph extends React.Component<Props, State> {
           nodes: finalNodes,
           links: finalLinks
         } = visApproach(nodes, links, graphDirection, nodeDistanceX, nodeDistanceY);
-        console.log("habib");
-        console.log(nodes);
-
 
         this.setState({
           isLoading: false,
