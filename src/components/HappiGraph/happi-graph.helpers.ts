@@ -1,5 +1,11 @@
 import { itemGroupIconMap } from '@lfai/egeria-js-commons';
 
+enum GraphType {
+  LINEAGE,
+  TEX_INHERITANCE,
+  TEX_NEIGHBOURHOOD
+}
+
 const getNodeHeight = (length: number) => {
   const defaultHeight = 70;
 
@@ -62,6 +68,7 @@ const mapLinks = (links: any, nodes: any) => {
 };
 
 export {
+  GraphType,
   mapNodes,
   mapLinks
 }
