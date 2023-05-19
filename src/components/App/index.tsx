@@ -11,6 +11,7 @@ import './index.scss';
 import '../HappiGraph/happi-graph.scss';
 
 import { mockData } from '../../mockData';
+import {texMockData} from '../HappiGraph/Tex/dataRender';
 import { Modal } from '@mantine/core';
 
 const rawData = {
@@ -21,8 +22,9 @@ const rawData = {
 export function App() {
   const [selectedNodeData, setSelectedNodeData] = useState(undefined);
   const [opened, setOpened] = useState(false);
+  const [graphType, selectGraphType] = useState(GraphType.TEX_INHERITANCE);
 
-  const selectGraphName = (graphType: GraphType) => {
+  const selectGraphName = () => {
     let graphName = "";
     switch(graphType) {
       case GraphType.LINEAGE: {
@@ -44,10 +46,28 @@ export function App() {
     return graphName;
   } 
 
+  const selectGraphData = () => {
+    let graphData;
+    switch(graphType) {
+      case GraphType.LINEAGE: {
+        graphData = mockData;
+        break;
+      }
+      case GraphType.TEX_INHERITANCE: {
+        graphData = texMockData;
+        break;
+      }
+      default:
+        graphData = texMockData;
+        console.log('GRAPH_TYPE_NOT_SELECTED');
+    }
+    return graphData;
+  } 
+
   return <>
     <div className="container">
       <div>
-        <h1>{selectGraphName(GraphType.TEX_INHERITANCE)}</h1>
+        <h1>{selectGraphName()}</h1>
       </div>
 
       <Modal
@@ -61,9 +81,9 @@ export function App() {
         </Modal>
 
       <div style={{width: 1200, height: 800, margin: '0 auto'}}>
-        <HappiGraph rawData={{...rawData}}
+        <HappiGraph rawData={{...selectGraphData()}}
                     algorithm={"VISJS"}
-                    graphType={GraphType.TEX_INHERITANCE}
+                    graphType={graphType}
                     debug={false}
                     printMode={false}
                     graphDirection={"HORIZONTAL"}
