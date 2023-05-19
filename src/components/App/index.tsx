@@ -22,10 +22,32 @@ export function App() {
   const [selectedNodeData, setSelectedNodeData] = useState(undefined);
   const [opened, setOpened] = useState(false);
 
+  const selectGraphName = (graphType: GraphType) => {
+    let graphName = "";
+    switch(graphType) {
+      case GraphType.LINEAGE: {
+        graphName = "Lineage";
+        break;
+      }
+      case GraphType.TEX_INHERITANCE: {
+        graphName = "Tex Entity Inheritance";
+        break;
+      }
+      case GraphType.TEX_NEIGHBOURHOOD: {
+        graphName = "Tex Neighbourhood";
+        break;
+      }
+      default:
+        graphName = "Lineage";
+        console.log('GRAPH_TYPE_NOT_SELECTED');
+    }
+    return graphName;
+  } 
+
   return <>
     <div className="container">
-      <div style={{textAlign: 'center'}}>
-        <h1>TEx</h1>
+      <div>
+        <h1>{selectGraphName(GraphType.TEX_INHERITANCE)}</h1>
       </div>
 
       <Modal
