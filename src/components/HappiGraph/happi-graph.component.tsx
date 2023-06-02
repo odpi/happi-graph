@@ -63,33 +63,14 @@ interface State {
   customZoomOut: any; 
   initCenterGraph: any;
   graphType: number;
-
 }
-
 
 class HappiGraph extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     const mappedNodes = mapNodes(props.rawData.nodes, props.selectedNodeId);
     const mappedLinks = mapLinks(props.rawData.edges, mappedNodes);
-    let selectedGraphType;
-    switch(props.graphType) {
-      case GraphType.LINEAGE: {
-        selectedGraphType=LineageRender;
-        break;
-      }
-      case GraphType.TEX_INHERITANCE: {
-        selectedGraphType=TexInheritanceRender;
-        break;
-      }
-      case GraphType.TEX_NEIGHBOURHOOD: {
-        selectedGraphType=TexNeighbourhoodRender;
-        break;
-      }
-      default:
-        selectedGraphType=LineageRender
-        console.log('GRAPH_TYPE_NOT_SELECTED');
-    }
+
     this.state = {
       algorithm: props.algorithm ? props.algorithm : 'ELK',
       rawData: { ...props.rawData },
@@ -108,16 +89,36 @@ class HappiGraph extends React.Component<Props, State> {
       allGroup: null,
       isFullscreen: false,
       printMode: props.printMode ? true : false,
-      addLinks: selectedGraphType.addLinks,
-      addNodes: selectedGraphType.addNodes,
-      centerGraph: selectedGraphType.centerGraph,
-      customZoomIn: selectedGraphType.customZoomIn,
-      customZoomOut: selectedGraphType.customZoomOut,
-      initCenterGraph: selectedGraphType.initCenterGraph,
+      addLinks: this.selectGraphType(props.graphType).addLinks,
+      addNodes: this.selectGraphType(props.graphType).addNodes,
+      centerGraph: this.selectGraphType(props.graphType).centerGraph,
+      customZoomIn: this.selectGraphType(props.graphType).customZoomIn,
+      customZoomOut: this.selectGraphType(props.graphType).customZoomOut,
+      initCenterGraph: this.selectGraphType(props.graphType).initCenterGraph,
       graphType: props.graphType
     };
+  }
 
-
+  selectGraphType = (type: number): any =>  {
+    let selectedGraphType;
+    switch(type) {
+      case GraphType.LINEAGE: {
+        selectedGraphType=LineageRender;
+        break;
+      }
+      case GraphType.TEX_INHERITANCE: {
+        selectedGraphType=TexInheritanceRender;
+        break;
+      }
+      case GraphType.TEX_NEIGHBOURHOOD: {
+        selectedGraphType=TexNeighbourhoodRender;
+        break;
+      }
+      default:
+        selectedGraphType=LineageRender
+        console.log('GRAPH_TYPE_NOT_SELECTED');
+    }
+    return selectedGraphType;
   }
 
   selectAlgorithm(callback: any) {
@@ -242,7 +243,7 @@ class HappiGraph extends React.Component<Props, State> {
         .on('dblclick.zoom', null);
 
         this.state.addNodes(nodes, nodesGroup, graphDirection, onNodeClick);
-        TexInheritanceRender.addLinks(links, linksGroup, graphDirection, nodes);
+        this.state.addLinks(links, linksGroup, graphDirection, nodes);
 
       this.state.initCenterGraph(allGroup, svg, zoom, callback);
     });
