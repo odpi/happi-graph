@@ -3,9 +3,9 @@ import * as d3 from "d3";
 // import "./happi-graph.scss";
 import { GraphType, mapLinks, mapNodes } from "./happi-graph.helpers";
 import { elkApproach, visApproach } from "./happi-graph.algorithms";
-import * as LineageRender from "./happi-graph.render";
-import * as TexInheritanceRender from "./Tex/tex-inheritance.render";
-import * as TexNeighbourhoodRender from "./Tex/tex-inheritance.render";
+import { addLinks as addLinksLineage, addNodes as addNodesLineage, centerGraph, customZoomIn, customZoomOut, initCenterGraph } from "./happi-graph.render";
+import {addLinks as addLinksTexInher, addNodes as addNodesTexInher} from "./Tex/tex-inheritance.render";
+import {addLinks as addLinksTexNeigh, addNodes as addNodesTexNeigh} from "./Tex/tex-neighbourhood.render";
 import HappiGraphLegend from "./happi-graph-legend.component";
 
 import { ActionIcon } from '@mantine/core';
@@ -55,19 +55,13 @@ interface State {
   allGroup: any;
   isFullscreen: boolean;
   printMode: boolean;
-
-  addLinks: any;
-  addNodes: any; 
-  centerGraph: any;
-  customZoomIn: any; 
-  customZoomOut: any; 
-  initCenterGraph: any;
   graphType: number;
 }
 
 class HappiGraph extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
+
     const mappedNodes = mapNodes(props.rawData.nodes, props.selectedNodeId);
     const mappedLinks = mapLinks(props.rawData.edges, mappedNodes);
 
@@ -89,33 +83,42 @@ class HappiGraph extends React.Component<Props, State> {
       allGroup: null,
       isFullscreen: false,
       printMode: props.printMode ? true : false,
-      addLinks: this.selectGraphType(props.graphType).addLinks,
-      addNodes: this.selectGraphType(props.graphType).addNodes,
-      centerGraph: this.selectGraphType(props.graphType).centerGraph,
-      customZoomIn: this.selectGraphType(props.graphType).customZoomIn,
-      customZoomOut: this.selectGraphType(props.graphType).customZoomOut,
-      initCenterGraph: this.selectGraphType(props.graphType).initCenterGraph,
       graphType: props.graphType
     };
   }
 
-  selectGraphType = (type: number): any =>  {
+  getGraphRenderMethods = (type: number): {addNodes:any, addLinks:any} =>  {
     let selectedGraphType;
     switch(type) {
       case GraphType.LINEAGE: {
-        selectedGraphType=LineageRender;
+        selectedGraphType={
+          addNodes: addNodesLineage,
+          addLinks: addLinksLineage
+        };
+
         break;
       }
       case GraphType.TEX_INHERITANCE: {
-        selectedGraphType=TexInheritanceRender;
+        selectedGraphType={
+          addNodes: addNodesTexInher,
+          addLinks: addLinksTexInher
+        };
+        
         break;
       }
       case GraphType.TEX_NEIGHBOURHOOD: {
-        selectedGraphType=TexNeighbourhoodRender;
+        selectedGraphType={
+          addNodes: addNodesTexNeigh,
+          addLinks: addLinksTexNeigh
+        };
+        
         break;
       }
       default:
-        selectedGraphType=LineageRender
+        selectedGraphType={
+          addNodes: addNodesLineage,
+          addLinks: addLinksLineage
+        };
         console.log('GRAPH_TYPE_NOT_SELECTED');
     }
     return selectedGraphType;
@@ -212,7 +215,7 @@ class HappiGraph extends React.Component<Props, State> {
     const { debug } = this.state;
 
     debug && console.log('init()');
-    const { svg, nodes, links, graphDirection, graphType } = this.state;
+    const { svg, nodes, links, graphDirection } = this.state;
 
     const allGroup =
       svg.append('g')
@@ -238,14 +241,17 @@ class HappiGraph extends React.Component<Props, State> {
       const { zoom } = this.state;
       const { onNodeClick } = this.props;
 
-      svg 
+      svg
         .call(zoom)
         .on('dblclick.zoom', null);
 
-        this.state.addNodes(nodes, nodesGroup, graphDirection, onNodeClick);
-        this.state.addLinks(links, linksGroup, graphDirection, nodes);
+      
+      const addNodes = this.getGraphRenderMethods(this.state.graphType).addNodes;
+      const addLinks = this.getGraphRenderMethods(this.state.graphType).addLinks;
+      addNodes(nodes, nodesGroup, graphDirection, onNodeClick);
+      addLinks(links, linksGroup, graphDirection, nodes);
 
-      this.state.initCenterGraph(allGroup, svg, zoom, callback);
+      initCenterGraph(allGroup, svg, zoom, callback);
     });
   }
 
@@ -260,7 +266,7 @@ class HappiGraph extends React.Component<Props, State> {
         svg,
         zoom
       } = this.state;
-      this.state.centerGraph(allGroup, svg, zoom);
+        centerGraph(allGroup, svg, zoom);
     });
 
   }
@@ -331,15 +337,15 @@ class HappiGraph extends React.Component<Props, State> {
         { !printMode && <>
           <div className="happi-graph-actions">
             <ActionIcon title="Zoom In" variant="subtle" size={35}>
-              <MdZoomIn size={25} onClick={() => this.state.customZoomIn(zoom, svg) } />
+              <MdZoomIn size={25} onClick={() => customZoomIn(zoom, svg) } />
             </ActionIcon>
 
             <ActionIcon title="Zoom Out" variant="subtle" size={35}>
-              <MdZoomOut size={25} onClick={() => this.state.customZoomOut(zoom, svg) } />
+              <MdZoomOut size={25} onClick={() => customZoomOut(zoom, svg) } />
             </ActionIcon>
 
             <ActionIcon title="Fit to screen" variant="subtle" size={35}>
-              <MdOutlineCenterFocusWeak size={25} onClick={() => this.state.centerGraph(allGroup, svg, zoom) } />
+              <MdOutlineCenterFocusWeak size={25} onClick={() => centerGraph(allGroup, svg, zoom) } />
             </ActionIcon>
 
             <ActionIcon title="Fullscreen" variant="subtle" size={35}>
