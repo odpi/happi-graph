@@ -24,27 +24,9 @@ export function App() {
   const [opened, setOpened] = useState(false);
   const [graphType, selectGraphType] = useState(GraphType.TEX_INHERITANCE);
 
-  const selectGraphName = () => {
-    let graphName = "";
-    switch(graphType) {
-      case GraphType.LINEAGE: {
-        graphName = "Lineage";
-        break;
-      }
-      case GraphType.TEX_INHERITANCE: {
-        graphName = "Tex Entity Inheritance";
-        break;
-      }
-      case GraphType.TEX_NEIGHBOURHOOD: {
-        graphName = "Tex Neighbourhood";
-        break;
-      }
-      default:
-        graphName = "Lineage";
-        console.log('GRAPH_TYPE_NOT_SELECTED');
-    }
-    return graphName;
-  } 
+  const handleChange = (event: any) => {
+    selectGraphType(Number(event.target.value));
+  };
 
   const selectGraphData = () => {
     let graphData;
@@ -54,6 +36,10 @@ export function App() {
         break;
       }
       case GraphType.TEX_INHERITANCE: {
+        graphData = texMockData;
+        break;
+      }
+      case GraphType.TEX_NEIGHBOURHOOD: {
         graphData = texMockData;
         break;
       }
@@ -67,8 +53,12 @@ export function App() {
   return <>
     <div className="container">
       <div>
-        <h1>{selectGraphName()}</h1>
-      </div>
+      <select value={graphType} onChange={handleChange}>
+        <option value={GraphType.LINEAGE}>Lineage</option>
+        <option value={GraphType.TEX_INHERITANCE}>Tex Entity Inheritance</option>
+        <option value={GraphType.TEX_NEIGHBOURHOOD}>Tex Neighbourhood</option>
+      </select>
+    </div>
 
       <Modal
           opened={opened}

@@ -74,7 +74,7 @@ class HappiGraph extends React.Component<Props, State> {
       isLoading: true,
       links: [...mappedLinks],
       nodeCountLimit: props.nodeCountLimit ? props.nodeCountLimit : 0,
-      nodeDistanceX: props.nodeDistanceX ? props.nodeDistanceX : 100,
+      nodeDistanceX: props.nodeDistanceX ? props.nodeDistanceX : 200,
       nodeDistanceY: props.nodeDistanceY ? props.nodeDistanceY : 400,
       nodes: [...mappedNodes],
       selectedNodeId: props.selectedNodeId,
