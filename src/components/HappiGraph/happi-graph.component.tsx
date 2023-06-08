@@ -23,7 +23,7 @@ interface Props {
   actions: any;
   algorithm?: string;
   selectedNodeId: string;
-  onNodeClick?: Function;
+  onNodeClick?: any;
   rawData: any;
   debug?: boolean;
   graphDirection?: string;
@@ -31,7 +31,7 @@ interface Props {
   nodeDistanceX?: number;
   nodeDistanceY?: number;
   printMode?: boolean;
-  onGraphRender?: Function;
+  onGraphRender?: any;
 }
 
 interface State {
@@ -82,7 +82,7 @@ class HappiGraph extends React.Component<Props, State> {
     };
   }
 
-  selectAlgorithm(callback: Function) {
+  selectAlgorithm(callback: any) {
     const {
       algorithm,
       graphDirection,
@@ -93,7 +93,7 @@ class HappiGraph extends React.Component<Props, State> {
     } = this.state;
 
     switch(algorithm) {
-      case 'ELK':
+      case 'ELK': {
         if(graphDirection === 'VERTICAL') {
           const {
             nodes: finalNodes,
@@ -122,7 +122,8 @@ class HappiGraph extends React.Component<Props, State> {
         }
 
         break;
-      case 'VISJS':
+      }
+      case 'VISJS': {
         const {
           nodes: finalNodes,
           links: finalLinks
@@ -137,10 +138,12 @@ class HappiGraph extends React.Component<Props, State> {
         });
 
         break;
-      default:
+      }
+      default: {
         console.log('NO_ALGORITHM_SELECTED');
 
         break;
+      }
     }
   }
 
@@ -155,7 +158,7 @@ class HappiGraph extends React.Component<Props, State> {
     }, () => {
       this.selectAlgorithm(() => {
         debug && console.log('Everything is ready.');
-        this.init(onGraphRender || (() => {}));
+        this.init(onGraphRender || (() => { console.log('READY'); }));
       });
     });
   }
@@ -166,7 +169,7 @@ class HappiGraph extends React.Component<Props, State> {
     debug && console.log("componentDidUpdate()", this.state);
   }
 
-  init(callback: Function) {
+  init(callback: any) {
     const { debug } = this.state;
 
     debug && console.log('init()');
@@ -179,8 +182,8 @@ class HappiGraph extends React.Component<Props, State> {
     const linksGroup = allGroup.append('g').attr('class', 'links-group');
     const nodesGroup = allGroup.append('g').attr('class', 'nodes-group');
 
-    let svgWidth = parseInt(svg.style('width'));
-    let svgHeight = parseInt(svg.style('height'));
+    const svgWidth = parseInt(svg.style('width'));
+    const svgHeight = parseInt(svg.style('height'));
 
     debug && console.log('svgWitdh = ', svgWidth);
     debug && console.log('svgHeight = ', svgHeight);

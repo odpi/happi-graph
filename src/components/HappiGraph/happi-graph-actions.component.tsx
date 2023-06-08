@@ -3,7 +3,7 @@ import HappiGraphListOfRelationships from './happi-graph-list-of-relationships.c
 import HappiGraphStatistics from './happi-graph-statistics.component';
 
 interface Props {
-  zoomIn?: Function;
+  zoomIn?: any;
   rawData?: any;
 }
 
