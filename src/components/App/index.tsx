@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import {
   HappiGraph,
@@ -10,55 +10,42 @@ import { GraphType } from "../HappiGraph/happi-graph.helpers";
 import './index.scss';
 import '../HappiGraph/happi-graph.scss';
 
-import { mockData } from '../../mockData';
+import { mockData as lineageMockData } from '../../mockData';
 import {texMockData} from '../HappiGraph/Tex/dataRender';
 import { Modal } from '@mantine/core';
 
-const rawData = {
-  ...mockData
-};
 
 
 export function App() {
   const [selectedNodeData, setSelectedNodeData] = useState(undefined);
   const [opened, setOpened] = useState(false);
-  const [graphType, selectGraphType] = useState(GraphType.TEX_INHERITANCE);
-
-  const handleChange = (event: any) => {
-    selectGraphType(Number(event.target.value));
-  };
+  //To switch the graph types displayed between Lineage/Inheritance/Neighbourhood graphs, change the initial graphType state to your preference
+  const [graphType, setGraphType] = useState(GraphType.LINEAGE);
 
   const selectGraphData = () => {
-    let graphData;
+    let objectGraphData;
     switch(graphType) {
       case GraphType.LINEAGE: {
-        graphData = mockData;
+        objectGraphData = lineageMockData;
         break;
       }
       case GraphType.TEX_INHERITANCE: {
-        graphData = texMockData;
+        objectGraphData = texMockData;
         break;
       }
       case GraphType.TEX_NEIGHBOURHOOD: {
-        graphData = texMockData;
+        objectGraphData = texMockData;
         break;
       }
       default:
-        graphData = texMockData;
+        objectGraphData = texMockData;
         console.log('GRAPH_TYPE_NOT_SELECTED');
     }
-    return graphData;
+    return objectGraphData;
   } 
 
   return <>
     <div className="container">
-      <div>
-      <select value={graphType} onChange={handleChange}>
-        <option value={GraphType.LINEAGE}>Lineage</option>
-        <option value={GraphType.TEX_INHERITANCE}>Tex Entity Inheritance</option>
-        <option value={GraphType.TEX_NEIGHBOURHOOD}>Tex Neighbourhood</option>
-      </select>
-    </div>
 
       <Modal
           opened={opened}
@@ -78,7 +65,7 @@ export function App() {
                     printMode={false}
                     graphDirection={"HORIZONTAL"}
                     selectedNodeId={""}
-                    actions={<HappiGraphActions rawData={{...rawData}}/>}
+                    actions={<HappiGraphActions rawData={{...selectGraphData()}}/>}
                     onNodeClick={(d: any) => { setSelectedNodeData(d); setOpened(true); }}
                     onGraphRender={() => { console.log('Graph rendered'); }} />
       </div>

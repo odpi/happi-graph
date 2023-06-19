@@ -20,6 +20,7 @@ import {
   AiOutlineFullscreen,
   AiOutlineFullscreenExit
 } from 'react-icons/ai';
+import { Console } from "console";
 
 interface Props {
   actions: any;
@@ -209,6 +210,12 @@ class HappiGraph extends React.Component<Props, State> {
     const { debug } = this.state;
 
     debug && console.log("componentDidUpdate()", this.state);
+
+    
+  }
+
+  changeGraphType() {
+    this.componentDidMount();
   }
 
   init(callback: any) {
@@ -283,7 +290,9 @@ class HappiGraph extends React.Component<Props, State> {
       allGroup,
       isFullscreen,
       debug,
-      printMode
+      printMode,
+      graphType,
+      rawData
     } = this.state;
 
     return (<>
