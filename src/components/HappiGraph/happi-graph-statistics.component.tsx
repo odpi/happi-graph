@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, Table, ActionIcon } from '@mantine/core';
+import { Modal, Table, ActionIcon, Tooltip } from '@mantine/core';
 import {
   IoMdStats
 } from 'react-icons/io';
@@ -72,9 +72,11 @@ class HappiGraphStatistics extends React.Component<Props, State> {
     const { data, opened } = this.state;
 
     return (<>
-      <ActionIcon title="Statistics" variant="subtle" size={35}>
+    <Tooltip label="Statistics" position="right">
+      <ActionIcon variant="subtle" size={35}>
         <IoMdStats size={25} onClick={() => this.setOpened(true)} />
       </ActionIcon>
+    </Tooltip>
 
       <Modal
         opened={opened}
