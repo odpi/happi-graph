@@ -115,7 +115,7 @@ export const addIcon = (nodeGroup: any, iconsMap: any) => {
   })
 };
 
-const isSelected = (nodeGroup: any) => {
+export const isSelected = (nodeGroup: any) => {
   nodeGroup
     .append('path')
     .classed('pin', true)

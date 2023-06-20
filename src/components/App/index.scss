@@ -12,6 +12,9 @@ html, body {
 
 .container {
   display:flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 20px;
   height:100%;
   width:100%;
 }

@@ -1,9 +1,11 @@
 import React from "react";
 import * as d3 from "d3";
 // import "./happi-graph.scss";
-import { mapLinks, mapNodes } from "./happi-graph.helpers";
+import { GraphType, mapLinks, mapNodes } from "./happi-graph.helpers";
 import { elkApproach, visApproach } from "./happi-graph.algorithms";
-import { addLinks, addNodes, centerGraph, customZoomIn, customZoomOut, initCenterGraph } from "./happi-graph.render";
+import { addLinks as addLinksLineage, addNodes as addNodesLineage, centerGraph, customZoomIn, customZoomOut, initCenterGraph } from "./happi-graph.render";
+import {addLinks as addLinksTexInher, addNodes as addNodesTexInher} from "./Tex/tex-inheritance.render";
+import {addLinks as addLinksTexNeigh, addNodes as addNodesTexNeigh} from "./Tex/tex-neighbourhood.render";
 import HappiGraphLegend from "./happi-graph-legend.component";
 
 import { ActionIcon, Tooltip } from '@mantine/core';
@@ -18,6 +20,7 @@ import {
   AiOutlineFullscreen,
   AiOutlineFullscreenExit
 } from 'react-icons/ai';
+import { Console } from "console";
 
 interface Props {
   actions: any;
@@ -32,6 +35,7 @@ interface Props {
   nodeDistanceY?: number;
   printMode?: boolean;
   onGraphRender?: any;
+  graphType: number;
 }
 
 interface State {
@@ -52,6 +56,7 @@ interface State {
   allGroup: any;
   isFullscreen: boolean;
   printMode: boolean;
+  graphType: number;
 }
 
 class HappiGraph extends React.Component<Props, State> {
@@ -70,16 +75,54 @@ class HappiGraph extends React.Component<Props, State> {
       isLoading: true,
       links: [...mappedLinks],
       nodeCountLimit: props.nodeCountLimit ? props.nodeCountLimit : 0,
-      nodeDistanceX: props.nodeDistanceX ? props.nodeDistanceX : 350,
-      nodeDistanceY: props.nodeDistanceY ? props.nodeDistanceY : 350,
+      nodeDistanceX: props.nodeDistanceX ? props.nodeDistanceX : 200,
+      nodeDistanceY: props.nodeDistanceY ? props.nodeDistanceY : 400,
       nodes: [...mappedNodes],
       selectedNodeId: props.selectedNodeId,
       svg: null,
       zoom: null,
       allGroup: null,
       isFullscreen: false,
-      printMode: props.printMode ? true : false
+      printMode: props.printMode ? true : false,
+      graphType: props.graphType
     };
+  }
+
+  getGraphRenderMethods = (type: number): {addNodes:any, addLinks:any} =>  {
+    let selectedGraphType;
+    switch(type) {
+      case GraphType.LINEAGE: {
+        selectedGraphType={
+          addNodes: addNodesLineage,
+          addLinks: addLinksLineage
+        };
+
+        break;
+      }
+      case GraphType.TEX_INHERITANCE: {
+        selectedGraphType={
+          addNodes: addNodesTexInher,
+          addLinks: addLinksTexInher
+        };
+        
+        break;
+      }
+      case GraphType.TEX_NEIGHBOURHOOD: {
+        selectedGraphType={
+          addNodes: addNodesTexNeigh,
+          addLinks: addLinksTexNeigh
+        };
+        
+        break;
+      }
+      default:
+        selectedGraphType={
+          addNodes: addNodesLineage,
+          addLinks: addLinksLineage
+        };
+        console.log('GRAPH_TYPE_NOT_SELECTED');
+    }
+    return selectedGraphType;
   }
 
   selectAlgorithm(callback: any) {
@@ -167,6 +210,12 @@ class HappiGraph extends React.Component<Props, State> {
     const { debug } = this.state;
 
     debug && console.log("componentDidUpdate()", this.state);
+
+    
+  }
+
+  changeGraphType() {
+    this.componentDidMount();
   }
 
   init(callback: any) {
@@ -203,6 +252,9 @@ class HappiGraph extends React.Component<Props, State> {
         .call(zoom)
         .on('dblclick.zoom', null);
 
+      
+      const addNodes = this.getGraphRenderMethods(this.state.graphType).addNodes;
+      const addLinks = this.getGraphRenderMethods(this.state.graphType).addLinks;
       addNodes(nodes, nodesGroup, graphDirection, onNodeClick);
       addLinks(links, linksGroup, graphDirection, nodes);
 
@@ -238,7 +290,9 @@ class HappiGraph extends React.Component<Props, State> {
       allGroup,
       isFullscreen,
       debug,
-      printMode
+      printMode,
+      graphType,
+      rawData
     } = this.state;
 
     return (<>

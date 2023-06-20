@@ -13,15 +13,16 @@ export const mockData = {
     {"id":"11","label":"Node 11","group":"GlossaryCategory","properties":{"glossary":"Glossary"},"level":0,"qualifiedName":"(category)=Category::(category)=Category::(category)=Category::(category)=Category"}
   ],
   edges:[
-    {"id":"4-8","from":"4","to":"8","label":"SemanticAssignment","type":null},
-    {"id":"7-8","from":"7","to":"8","label":"SemanticAssignment","type":null},
-    {"id":"1-8","from":"1","to":"8","label":"SemanticAssignment","type":null},
+    {"id":"4-8","from":"8","to":"4","label":"SemanticAssignment","type":null},
+    {"id":"7-8","from":"8","to":"7","label":"SemanticAssignment","type":null},
+    {"id":"1-8","from":"8","to":"1","label":"SemanticAssignment","type":null},
     {"id":"8-11","from":"8","to":"11","label":"TermCategorization","type":"ReferencingCategory"},
     {"id":"8-2","from":"8","to":"2","label":"TermCategorization","type":"ReferencingCategory"},
-    {"id":"3-8","from":"3","to":"8","label":"SemanticAssignment","type":null},
+    {"id":"3-8","from":"8","to":"3","label":"SemanticAssignment","type":null},
     {"id":"8-6","from":"8","to":"6","label":"TermCategorization","type":"ReferencingCategory"},
-    {"id":"10-8","from":"10","to":"8","label":"SemanticAssignment","type":null},
-    {"id":"9-8","from":"9","to":"8","label":"SemanticAssignment","type":null},
+    {"id":"10-8","from":"8","to":"10","label":"SemanticAssignment","type":null},
+    {"id":"9-8","from":"8","to":"9","label":"SemanticAssignment","type":null},
     {"id":"8-5","from":"8","to":"5","label":"TermCategorization","type":"PrimaryCategory"}
   ]
 };
+

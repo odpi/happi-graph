@@ -1,32 +1,74 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 import {
   HappiGraph,
   HappiGraphActions
 } from '../HappiGraph';
 
+import { GraphType } from "../HappiGraph/happi-graph.helpers";
+
 import './index.scss';
 import '../HappiGraph/happi-graph.scss';
 
-import { mockData } from '../../mockData';
+import { mockData as lineageMockData } from '../../mockData';
+import {texMockData} from '../HappiGraph/Tex/dataRender';
+import { Modal } from '@mantine/core';
 
-const rawData = {
-  ...mockData
-};
 
 
 export function App() {
+  const [selectedNodeData, setSelectedNodeData] = useState(undefined);
+  const [opened, setOpened] = useState(false);
+  //To switch the graph types displayed between Lineage/Inheritance/Neighbourhood graphs, change the initial graphType state to your preference
+  const [graphType, setGraphType] = useState(GraphType.LINEAGE);
+
+  const selectGraphData = () => {
+    let objectGraphData;
+    switch(graphType) {
+      case GraphType.LINEAGE: {
+        objectGraphData = lineageMockData;
+        break;
+      }
+      case GraphType.TEX_INHERITANCE: {
+        objectGraphData = texMockData;
+        break;
+      }
+      case GraphType.TEX_NEIGHBOURHOOD: {
+        objectGraphData = texMockData;
+        break;
+      }
+      default:
+        objectGraphData = texMockData;
+        console.log('GRAPH_TYPE_NOT_SELECTED');
+    }
+    return objectGraphData;
+  } 
+
   return <>
     <div className="container">
-      <HappiGraph rawData={{...rawData}}
-                  algorithm={""}
-                  debug={false}
-                  printMode={false}
-                  graphDirection={"VERTICAL"}
-                  selectedNodeId={"term@68e36496-7167-4af7-abdd-a0cd36e24084:6662c0f2.e1b1ec6c.66k78i6du.uchsna1.rn2epa.rfn2fjqf7h4qvmt5lflm8"}
-                  actions={<HappiGraphActions rawData={{...rawData}}/>}
-                  onNodeClick={(d: any) => console.log(d)}
-                  onGraphRender={() => { console.log('Graph rendered');}} />
+
+      <Modal
+          opened={opened}
+          onClose={() => setOpened(false)}
+          withCloseButton={false}
+          centered
+          size="50%"
+        >
+          { selectedNodeData && JSON.stringify(selectedNodeData) }
+        </Modal>
+
+      <div style={{width: 1200, height: 800, margin: '0 auto'}}>
+        <HappiGraph rawData={{...selectGraphData()}}
+                    algorithm={"VISJS"}
+                    graphType={graphType}
+                    debug={false}
+                    printMode={false}
+                    graphDirection={"HORIZONTAL"}
+                    selectedNodeId={""}
+                    actions={<HappiGraphActions rawData={{...selectGraphData()}}/>}
+                    onNodeClick={(d: any) => { setSelectedNodeData(d); setOpened(true); }}
+                    onGraphRender={() => { console.log('Graph rendered'); }} />
+      </div>
     </div>
   </>;
 }
